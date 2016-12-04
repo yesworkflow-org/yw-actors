@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.yesworkflow.actors.IActorScriptBuilder;
 import org.yesworkflow.actors.AugmentedScriptActor;
-import org.yesworkflow.actors.AugmentedScriptActor.DataSerializationFormat;
 
 import com.google.gson.Gson;
 
@@ -170,9 +169,9 @@ public class PythonActor extends AugmentedScriptActor {
 		}
 
 		public ScriptBuilder appendPrintStringStatement(String string) {
-			_script.append(		"print '"	)
+			_script.append(		"print('"	)
 				   .append( 	string		)
-				   .append(		"'"			)
+				   .append(		"')"		)
 				   .append(		EOL			);
 			return this;
 		}
@@ -184,7 +183,7 @@ public class PythonActor extends AugmentedScriptActor {
 		
 		public IActorScriptBuilder appendSerializationEndStatement() {
 			_script.append( 	"if (len(_outputMap) > 0) : " 		+
-								"  print json.dumps(_outputMap)" 	+ EOL );
+								"  print(json.dumps(_outputMap))" 	+ EOL );
 			return this;
 		}
 		
@@ -262,7 +261,7 @@ public class PythonActor extends AugmentedScriptActor {
 
 			appendComment("import packages required by all python actors");
 			appendCode( "import os, json" );
-			appendCode( "from StringIO import StringIO");
+			appendCode( "from io import StringIO");
 			appendBlankLine();
 		}
 

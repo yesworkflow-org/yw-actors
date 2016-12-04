@@ -14,7 +14,7 @@ public class TestPythonActor extends TestCase {
 
 		final PythonActor actor = new PythonActorBuilder()
 			.name("Hello")
-			.step("print 'Hello world!'")
+			.step("print('Hello world!')")
 			.build();
 
 		actor.configure();
@@ -25,20 +25,20 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL +
 			"# import packages required by all python actors" 											+ EOL +
 			"import os, json" 																			+ EOL +
-			"from StringIO import StringIO" 															+ EOL +
+			"from io import StringIO" 																	+ EOL +
 			"" 																							+ EOL +
 			"# BEGINNING OF ORIGINAL SCRIPT" 															+ EOL +
 			"" 																							+ EOL +
-			"print 'Hello world!'" 																		+ EOL +
+			"print('Hello world!')"																		+ EOL +
 			"" 																							+ EOL +
 			"# END OF ORIGINAL SCRIPT" 																	+ EOL +
 			"" 																							+ EOL +
 			"# signal end of output from original script" 												+ EOL +
-			"print '__END_OF_SCRIPT_OUTPUT__'" 															+ EOL +
+			"print('__END_OF_SCRIPT_OUTPUT__')" 														+ EOL +
 			"" 																							+ EOL +
 			"# Serialization of actor outputs"															+ EOL +
 			"_outputMap = dict()"																		+ EOL +
-			"if (len(_outputMap) > 0) :   print json.dumps(_outputMap)"									+ EOL +
+			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
 			, actor.getAugmentedStepScript());
 		
@@ -57,7 +57,7 @@ public class TestPythonActor extends TestCase {
 		final PythonActor actor = new PythonActorBuilder()
 			.name("Hello")
 			.input("greeting")
-			.step("print greeting, 'world!'")
+			.step("print(greeting + ' world!')")
 			.build();
 
 		actor.configure();
@@ -70,7 +70,7 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL +
 			"# import packages required by all python actors" 											+ EOL +
 			"import os, json" 																			+ EOL +
-			"from StringIO import StringIO" 															+ EOL +
+			"from io import StringIO" 																	+ EOL +
 			"" 																							+ EOL +
 			"# define functions for enabling and disabling actor inputs" 								+ EOL +
 			"def enableInput(input)      :   global enabledInputs;    enabledInputs   += ' ' + input" 	+ EOL +
@@ -85,19 +85,19 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"# BEGINNING OF ORIGINAL SCRIPT"															+ EOL +
 			""																							+ EOL +
-			"print greeting, 'world!'"																	+ EOL +
+			"print(greeting + ' world!')"																+ EOL +
 			"" 																							+ EOL +
 			"# END OF ORIGINAL SCRIPT" 																	+ EOL +
 			"" 																							+ EOL +
 			"# signal end of output from original script" 												+ EOL +
-			"print '__END_OF_SCRIPT_OUTPUT__'" 															+ EOL +
+			"print('__END_OF_SCRIPT_OUTPUT__')" 														+ EOL +
 			"" 																							+ EOL +
 			"# Serialization of actor outputs" 															+ EOL +
 			"_outputMap = dict()" 																		+ EOL +
 			"_outputMap['enabledInputs'] = enabledInputs" 												+ EOL +
 			"_outputMap['disabledInputs'] = disabledInputs" 											+ EOL +
 			""																							+ EOL +
-			"if (len(_outputMap) > 0) :   print json.dumps(_outputMap)" 								+ EOL +
+			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))" 								+ EOL +
 			"" 																							+ EOL 
 			, actor.getAugmentedStepScript());
 		
@@ -127,7 +127,7 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL +
 			"# import packages required by all python actors" 											+ EOL +
 			"import os, json" 																			+ EOL +
-			"from StringIO import StringIO" 															+ EOL +
+			"from io import StringIO" 																	+ EOL +
 			"" 																							+ EOL +
 			"# define functions for enabling and disabling actor outputs" 								+ EOL +
 			"def enableOutput(output)    :   global enabledOutputs;   enabledOutputs  += ' ' + output" 	+ EOL +
@@ -144,7 +144,7 @@ public class TestPythonActor extends TestCase {
 			"# END OF ORIGINAL SCRIPT" 																	+ EOL +
 			"" 																							+ EOL +
 			"# signal end of output from original script" 												+ EOL +
-			"print '__END_OF_SCRIPT_OUTPUT__'" 															+ EOL +
+			"print('__END_OF_SCRIPT_OUTPUT__')"															+ EOL +
 			"" 																							+ EOL +
 			"# Serialization of actor outputs" 															+ EOL +
 			"_outputMap = dict()" 																		+ EOL +
@@ -153,7 +153,7 @@ public class TestPythonActor extends TestCase {
 			"_outputMap['enabledOutputs'] = enabledOutputs"												+ EOL +
 			"_outputMap['disabledOutputs'] = disabledOutputs"											+ EOL +
 			""																							+ EOL +
-			"if (len(_outputMap) > 0) :   print json.dumps(_outputMap)"									+ EOL +
+			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
 			, actor.getAugmentedStepScript());
 		
@@ -183,7 +183,7 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL +
 			"# import packages required by all python actors" 											+ EOL +
 			"import os, json" 																			+ EOL +
-			"from StringIO import StringIO" 															+ EOL +
+			"from io import StringIO" 																	+ EOL +
 			"" 																							+ EOL +
 			"# initialize actor state variables" 														+ EOL +
 			"greeting=None" 																			+ EOL +
@@ -195,13 +195,13 @@ public class TestPythonActor extends TestCase {
 			"# END OF ORIGINAL SCRIPT" 																	+ EOL +
 			""							 																+ EOL +
 			"# signal end of output from original script" 												+ EOL +
-			"print '__END_OF_SCRIPT_OUTPUT__'" 															+ EOL +
+			"print('__END_OF_SCRIPT_OUTPUT__')" 														+ EOL +
 			""							 																+ EOL +
 			"# Serialization of actor outputs" 															+ EOL +
 			"_outputMap = dict()" 																		+ EOL +
 			"_outputMap['greeting'] = greeting" 														+ EOL +
 			""							 																+ EOL +
-			"if (len(_outputMap) > 0) :   print json.dumps(_outputMap)"									+ EOL +
+			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
 			, actor.getAugmentedStepScript());
 		
@@ -239,7 +239,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"# import packages required by all python actors" 											+ EOL +			
 			"import os, json" 																			+ EOL +
-			"from StringIO import StringIO" 															+ EOL +
+			"from io import StringIO" 																	+ EOL +
 			"" 																							+ EOL +
 			"# define functions for enabling and disabling actor inputs"								+ EOL +
 			"def enableInput(input)      :   global enabledInputs;    enabledInputs   += ' ' + input"	+ EOL +
@@ -268,7 +268,7 @@ public class TestPythonActor extends TestCase {
 			"# END OF ORIGINAL SCRIPT"																	+ EOL +
 			""																							+ EOL +
 			"# signal end of output from original script"												+ EOL +
-			"print '__END_OF_SCRIPT_OUTPUT__'"															+ EOL +
+			"print('__END_OF_SCRIPT_OUTPUT__')"															+ EOL +
 			""																							+ EOL +
 			"# Serialization of actor outputs" 															+ EOL +
 			"_outputMap = dict()"																		+ EOL +
@@ -280,7 +280,7 @@ public class TestPythonActor extends TestCase {
 			"_outputMap['enabledOutputs'] = enabledOutputs"												+ EOL +
 			"_outputMap['disabledOutputs'] = disabledOutputs"											+ EOL +
 			""							 																+ EOL +
-			"if (len(_outputMap) > 0) :   print json.dumps(_outputMap)"									+ EOL +
+			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL
 			, actor.getAugmentedStepScript());
 		
