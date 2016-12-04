@@ -18,7 +18,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 
 	public enum DataSerializationFormat { YAML, JSON };
 	
-	public abstract IActorScriptBuilder getNewScriptBuilder();
+	public abstract IActorScriptAugmenter getNewScriptBuilder();
 	public abstract String getScriptRunCommand();
 	public abstract DataSerializationFormat getOutputSerializationFormat();
 
@@ -41,7 +41,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String getAugmentedConfigureScript() throws IOException {
 		
-		IActorScriptBuilder augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "configure");
 		_appendOriginalScript(augmentedScriptBuilder, _configureScript);
@@ -69,7 +69,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String _getAugmentedInitializeScript() throws Exception {
 		
-		IActorScriptBuilder augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "initialize");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -115,7 +115,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	public String getAugmentedStepScript() throws Exception {
 		
-		IActorScriptBuilder augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "step");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -151,7 +151,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 
 	protected String _getAugmentedWrapupScript() throws Exception {
 		
-		IActorScriptBuilder augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "wrapup");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
@@ -176,7 +176,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String _getAugmentedDisposeScript() throws Exception {
 		
-		IActorScriptBuilder augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "dispose");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
@@ -187,31 +187,31 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		return augmentedScriptBuilder.toString();
 	}
 	
-	protected void _appendScriptHeader(IActorScriptBuilder script, String scriptType) throws IOException {
+	protected void _appendScriptHeader(IActorScriptAugmenter script, String scriptType) throws IOException {
 		script.appendComment("AUGMENTED " + scriptType.toUpperCase() + " SCRIPT FOR ACTOR " + this._name)
 		  	  .appendBlankLine()
 		  	  .appendScriptHeader(script, scriptType);
 	}
 
-	protected void _appendScriptSuffix(IActorScriptBuilder script) {
-		script.appendScriptExitCommend();
+	protected void _appendScriptSuffix(IActorScriptAugmenter script) {
+		script.appendScriptExitCommand();
 	}
 
-	protected void _appendInputControlFunctions(IActorScriptBuilder script) {
+	protected void _appendInputControlFunctions(IActorScriptAugmenter script) {
 		if (!_inputSignature.isEmpty()) {
 			script.appendInputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 	
-	protected void _appendOutputControlFunctions(IActorScriptBuilder script) {
+	protected void _appendOutputControlFunctions(IActorScriptAugmenter script) {
 		if (!_outputSignature.isEmpty()) {
 			script.appendOutputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 
-	protected void _appendOutputVariableInitializers(IActorScriptBuilder script) throws Exception {
+	protected void _appendOutputVariableInitializers(IActorScriptAugmenter script) throws Exception {
 		if (!_outputSignature.isEmpty()) {
 			script.appendComment("initialize actor outputs to null");
 			for (String name : _outputSignature.keySet()) {
@@ -221,7 +221,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 
-	protected void _appendActorStateVariableInitializers(IActorScriptBuilder script, boolean hideInputs) throws Exception {
+	protected void _appendActorStateVariableInitializers(IActorScriptAugmenter script, boolean hideInputs) throws Exception {
 		if (!_stateVariables.isEmpty()) {
 			script.appendComment("initialize actor state variables");
 			Set<String> stateNames = new HashSet<String>(_stateVariables.keySet());
@@ -237,7 +237,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
-	protected void _appendActorInputVariableInitializers(IActorScriptBuilder script) throws Exception {
+	protected void _appendActorInputVariableInitializers(IActorScriptAugmenter script) throws Exception {
 		if (!_inputSignature.isEmpty()) {
 			script.appendComment("initialize actor input variables");			
 			Set<String> inputNames = _inputSignature.keySet();
@@ -248,7 +248,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
-	protected void _appendActorSettingInitializers(IActorScriptBuilder script) throws Exception {
+	protected void _appendActorSettingInitializers(IActorScriptAugmenter script) throws Exception {
 		if (!_constants.isEmpty()) {
 			script.appendComment("initialize actor setting");
 			Set<String> settingNames = _constants.keySet();
@@ -259,7 +259,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 
-	protected void _appendStepDirectoryEntryCommand(IActorScriptBuilder script) {
+	protected void _appendStepDirectoryEntryCommand(IActorScriptAugmenter script) {
 		if (_actorStatus.getStepDirectory() != null) {
 			script.appendComment("change working directory to actor step directory")
 				  .appendChangeDirectory(_actorStatus.getStepDirectory().toString())
@@ -267,7 +267,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
-	protected void _appendOriginalScript(IActorScriptBuilder script,String originalScript) {
+	protected void _appendOriginalScript(IActorScriptAugmenter script,String originalScript) {
 		script.appendComment("BEGINNING OF ORIGINAL SCRIPT")
 			  .appendBlankLine()
 			  .appendCode(originalScript)
@@ -276,23 +276,23 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			  .appendBlankLine();
 	}
 	
-	protected void _appendOriginalScriptOutputDelimiter(IActorScriptBuilder script) {
+	protected void _appendOriginalScriptOutputDelimiter(IActorScriptAugmenter script) {
 		script.appendComment("signal end of output from original script")
 			  .appendPrintStringStatement(_scriptOutputDelimiter)
 			  .appendBlankLine();
 	}
 	
-	protected void appendSerializationBeginStatement(IActorScriptBuilder sb) {
+	protected void appendSerializationBeginStatement(IActorScriptAugmenter sb) {
 		sb.appendComment("Serialization of actor outputs");
 		sb.appendSerializationBeginStatement();
 	}
 	
-	protected void appendSerializationEndStatement(IActorScriptBuilder sb) {
+	protected void appendSerializationEndStatement(IActorScriptAugmenter sb) {
 		sb.appendSerializationEndStatement();
 		sb.appendBlankLine();
 	}
 	
-	protected void _appendOutputVariableSerializationStatements(IActorScriptBuilder script) {
+	protected void _appendOutputVariableSerializationStatements(IActorScriptAugmenter script) {
 		if (! _outputSignature.isEmpty()) {
 			Set<String> outputNames = new HashSet<String>(_outputSignature.keySet());
 			outputNames.removeAll(_stateVariables.keySet());
@@ -303,7 +303,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 
-	protected void _appendStateVariableSerializationStatements(IActorScriptBuilder script) {
+	protected void _appendStateVariableSerializationStatements(IActorScriptAugmenter script) {
 		if (!_stateVariables.isEmpty()) {
 			for (String name : _stateVariables.keySet()) {
 				script.appendVariableSerializationStatement(name, _variableTypes.get(name));
@@ -312,7 +312,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 
-	protected void _appendInputControlVariableSerializationStatements(IActorScriptBuilder script) {
+	protected void _appendInputControlVariableSerializationStatements(IActorScriptAugmenter script) {
 		if (!_inputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledInputs", "disabledInputs"}) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);
@@ -321,7 +321,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
-	protected void _appendOutputControlVariableSerializationStatements(IActorScriptBuilder script) {
+	protected void _appendOutputControlVariableSerializationStatements(IActorScriptAugmenter script) {
 		if (! _outputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledOutputs", "disabledOutputs" }) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);
@@ -431,6 +431,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		Object yamlParseResult =  yaml.load(yamlOutput);
 		
 		if (yamlParseResult instanceof Map<?,?>) {
+			@SuppressWarnings("unchecked")
 			Map<String,Object> outputMap = (Map<String,Object>) yamlParseResult;
 			if (outputMap != null) {
 				for (Map.Entry<String,Object> entry : outputMap.entrySet()) { 

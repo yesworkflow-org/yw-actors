@@ -62,7 +62,7 @@ public class GroovyActorBuilder implements IActorBuilder {
 	}
 
 	@Override
-	public IActorBuilder types(Map<String, String> types) {
+	public GroovyActorBuilder types(Map<String, String> types) {
 		_types.putAll(types);
 		return this;
 	}
