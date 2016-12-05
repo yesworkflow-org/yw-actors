@@ -3,9 +3,9 @@ package org.yesworkflow.actors.groovy;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.yesworkflow.actors.IActorBuilder;
+import org.yesworkflow.actors.ActorBuilder;
 
-public class GroovyActorBuilder implements IActorBuilder {
+public class GroovyActorBuilder extends ActorBuilder {
 	
 	private String	_name = "";
 	private String _initialize = "";
@@ -61,7 +61,6 @@ public class GroovyActorBuilder implements IActorBuilder {
 		return this;
 	}
 
-	@Override
 	public GroovyActorBuilder types(Map<String, String> types) {
 		_types.putAll(types);
 		return this;

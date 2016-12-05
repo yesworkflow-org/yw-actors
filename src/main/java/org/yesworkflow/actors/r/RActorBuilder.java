@@ -3,9 +3,9 @@ package org.yesworkflow.actors.r;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.yesworkflow.actors.IActorBuilder;
+import org.yesworkflow.actors.ActorBuilder;
 
-public class RActorBuilder implements IActorBuilder {
+public class RActorBuilder extends ActorBuilder {
 	
 	private String				_name = "";
 	private String 				_initialize = "";
@@ -66,7 +66,6 @@ public class RActorBuilder implements IActorBuilder {
 		return this;
 	}
 
-	@Override
 	public RActorBuilder types(Map<String, String> types) {
 		_types.putAll(types);
 		return this;

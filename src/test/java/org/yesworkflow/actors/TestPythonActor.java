@@ -12,7 +12,7 @@ public class TestPythonActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
-		final PythonActor actor = new PythonActorBuilder()
+		final PythonActor actor = (PythonActor) new PythonActorBuilder()
 			.name("Hello")
 			.step("print('Hello world!')")
 			.build();
@@ -54,11 +54,11 @@ public class TestPythonActor extends TestCase {
 		
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
-		final PythonActor actor = new PythonActorBuilder()
-			.name("Hello")
-			.input("greeting")
-			.step("print(greeting + ' world!')")
-			.build();
+		final IActor actor = new PythonActorBuilder()
+								.name("Hello")
+								.input("greeting")
+								.step("print(greeting + ' world!')")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -99,7 +99,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))" 								+ EOL +
 			"" 																							+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -113,11 +113,11 @@ public class TestPythonActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
-		final PythonActor actor = new PythonActorBuilder()
-			.name("Hello")
-			.step("greeting='Nice to meet you.'")
-			.output("greeting")
-			.build();
+		final IActor actor = new PythonActorBuilder()
+								.name("Hello")
+								.step("greeting='Nice to meet you.'")
+								.output("greeting")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -155,7 +155,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -169,11 +169,11 @@ public class TestPythonActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
-		final PythonActor actor = new PythonActorBuilder()
-			.name("Hello")
-			.state("greeting")
-			.step("greeting='Nice to meet you.'")
-			.build();
+		final IActor actor = new PythonActorBuilder()
+								.name("Hello")
+								.state("greeting")
+								.step("greeting='Nice to meet you.'")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -203,7 +203,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -217,16 +217,16 @@ public class TestPythonActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
-		final PythonActor actor = new PythonActorBuilder()
-			.name("Multiplier")
-			.input("x")
-			.input("y")
-			.step("z = x * y")
-			.output("z")
-			.type("x", "Integer")
-			.type("y", "Integer")
-			.type("z", "Integer")
-			.build();
+		final IActor actor = new PythonActorBuilder()
+								.name("Multiplier")
+								.input("x")
+								.input("y")
+								.step("z = x * y")
+								.output("z")
+								.type("x", "Integer")
+								.type("y", "Integer")
+								.type("z", "Integer")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -282,7 +282,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL
-			, actor.getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
