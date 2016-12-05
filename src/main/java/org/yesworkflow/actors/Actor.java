@@ -1,11 +1,14 @@
 package org.yesworkflow.actors;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 /**
  * This class is the default base class for all implementations of the Actor
  * interface. 
@@ -15,32 +18,35 @@ public abstract class Actor implements IActor {
 	///////////////////////////////////////////////////////////////////////////
 	////                    private instance fields                        ////
 	
-	private Boolean 	_cloneable;
+//	private Boolean 	_cloneable;
 	private boolean 	_stateful;
-	private String 	_stepDirectoryFileSystem;
+	private String 		_stepDirectoryFileSystem;
 	private int 		_stepOfScratchDirectory;
 	private boolean 	_usesStepDirectory;
-		
+    
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////                protected singleton instance fields                                ////
-	protected ActorStatus 				_actorStatus;
-	protected String 					_beanName;	
-	protected String 					_name;
-	protected File 						_stepDirectory;
+	protected ActorStatus 	_actorStatus;
+	protected String 		_beanName;	
+	protected String 		_name;
+	protected File 			_stepDirectory;
+    protected InputStream 	inStream;
+    protected PrintStream 	outStream;
+    protected PrintStream 	errStream;
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	////                protected collection instance fields                               ////
 
 	protected Map<String,Object> 				_constants;
 	protected Map<String,Object> 				_defaultInputValues;
-	protected Map<String,InputSignatureElement> 	_inputSignature;
+	protected Map<String,InputSignatureElement>	_inputSignature;
 	protected Map<String,Object> 				_inputValues;
-	protected Map<String,OutputSignatureElement> _outputSignature;
+	protected Map<String,OutputSignatureElement>_outputSignature;
 	protected Map<String,Object> 				_outputValues;
 	protected Map<String,String> 				_variableTypes;
 	protected Map<String,Object> 				_stateVariables;
 	
-	private String _scratchDirectoryPrefix;
+//	private String _scratchDirectoryPrefix;
 	protected String runDirectoryPath;
 	protected int _runCount; 	// step count since latest call of configure() or reset(),
 								//   unlike 'step' which is step count last call to configure(), reset(), or initialize()
@@ -60,13 +66,16 @@ public abstract class Actor implements IActor {
 			// initialize singleton instance fields
 			_actorStatus 			 = new ActorStatus();
 			_name 				 = "";
-			_cloneable 				 = null;
+//			_cloneable 				 = null;
 			_stateful 				 = false;
 			_stepDirectory 			 = null;
 			_stepDirectoryFileSystem = "";
 			_stepOfScratchDirectory  = 0;
 			_usesStepDirectory 		 = false;
-			
+			inStream 				 = System.in;
+		    outStream 				 =System.out;
+		    errStream 				 = System.err;
+		    
 			// initialize collection instance fields
 			_stateVariables 		= new HashMap<String,Object>();
 			_constants	 			= new HashMap<String,Object>();
@@ -75,8 +84,7 @@ public abstract class Actor implements IActor {
 			_defaultInputValues		= new HashMap<String, Object>();
 			_inputSignature 		= new LinkedHashMap<String,InputSignatureElement>();
 			_outputSignature 		= new LinkedHashMap<String,OutputSignatureElement>();
-			_variableTypes 			= new Hashtable<String,String>();
-			
+			_variableTypes 			= new Hashtable<String,String>();			
 		}
 	}
 	
@@ -108,6 +116,18 @@ public abstract class Actor implements IActor {
 		
 		return theClone;
 	}
+	
+    public synchronized void errorStream(PrintStream errStream) {
+        this.errStream = errStream;
+    }
+
+    public synchronized void inputStream(InputStream inStream) {
+        this.inStream = inStream;
+    }
+    
+    public synchronized void outputStream(PrintStream outStream) {
+        this.outStream = outStream;
+    }
 	
 	
 	///////////////////////////////////////////////////////////////////////////
