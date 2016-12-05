@@ -83,6 +83,9 @@ public abstract class ActorBuilder implements IActorBuilder {
 		actor.setOutputs(outputs);
 		actor.setState(state);
 		actor.setTypes(types);
+		actor.inputStream(inStream);
+		actor.outputStream(outStream);
+		actor.errorStream(errStream);
 		
 		return actor;
 	}

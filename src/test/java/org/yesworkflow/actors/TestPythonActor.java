@@ -1,8 +1,11 @@
 package org.yesworkflow.actors;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.yesworkflow.actors.python.PythonActor;
 import org.yesworkflow.actors.python.PythonActorBuilder;
-import org.yesworkflow.actors.util.StdoutRecorder;
 
 import junit.framework.TestCase;
 
@@ -10,12 +13,32 @@ public class TestPythonActor extends TestCase {
 
 	protected final static String EOL = System.getProperty("line.separator");
 	
+    protected volatile OutputStream stdoutBuffer;
+    protected volatile OutputStream stderrBuffer;
+    
+    protected volatile PrintStream stdoutStream;
+    protected volatile PrintStream stderrStream;
+
+    @Override
+    public void setUp() throws Exception {
+        
+        super.setUp();
+        
+        stdoutBuffer = new ByteArrayOutputStream();
+        stdoutStream = new PrintStream(stdoutBuffer);
+    
+        stderrBuffer = new ByteArrayOutputStream();
+        stderrStream = new PrintStream(stderrBuffer);
+    }
+	
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
 		final IActor actor = (PythonActor) new PythonActorBuilder()
-			.name("Hello")
-			.step("print('Hello world!')")
-			.build();
+											   .outputStream(stdoutStream)
+											   .errorStream(stderrStream)
+											   .name("Hello")
+											   .step("print('Hello world!')")
+											   .build();
 
 		actor.configure();
 		actor.initialize();
@@ -42,23 +65,21 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL 
 			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
-		// run the workflow while capturing stdout and stderr 
-		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
-			public void execute() throws Exception {actor.step();}});
-			
-		// confirm expected stdout showing three values printed
-		assertEquals(
-			"Hello world!" 					+ EOL ,
-			recorder.getStdoutRecording());
+		actor.step();
+
+		assertEquals("", stderrBuffer.toString());
+		assertEquals("Hello world!" + EOL, stdoutBuffer.toString());
 	}
 		
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
 		final IActor actor = new PythonActorBuilder()
-								.name("Hello")
-								.input("greeting")
-								.step("print(greeting + ' world!')")
-								.build();
+ 	 						     .outputStream(stdoutStream)
+							     .errorStream(stderrStream)
+								 .name("Hello")
+								 .input("greeting")
+								 .step("print(greeting + ' world!')")
+								 .build();
 
 		actor.configure();
 		actor.initialize();
@@ -101,23 +122,21 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL 
 			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
-		// run the workflow while capturing stdout and stderr 
-		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
-			public void execute() throws Exception {actor.step();}});
+		actor.step();
 			
-		// confirm expected stdout showing three values printed
-		assertEquals(
-			"Goodbye world!" 					+ EOL ,
-			recorder.getStdoutRecording());
+		assertEquals("", stderrBuffer.toString());
+		assertEquals("Goodbye world!" + EOL, stdoutBuffer.toString());
 	}
 
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
 		final IActor actor = new PythonActorBuilder()
-								.name("Hello")
-								.step("greeting='Nice to meet you.'")
-								.output("greeting")
-								.build();
+				     			 .outputStream(stdoutStream)
+				     			 .errorStream(stderrStream)
+								 .name("Hello")
+								 .step("greeting='Nice to meet you.'")
+								 .output("greeting")
+								 .build();
 
 		actor.configure();
 		actor.initialize();
@@ -157,23 +176,22 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL 
 			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
-		// run the workflow while capturing stdout and stderr 
-		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
-			public void execute() throws Exception {actor.step();}});
+		actor.step();
 			
-		// confirm expected stdout showing three values printed
-		assertEquals("", recorder.getStdoutRecording());
-		
+		assertEquals("", stderrBuffer.toString());
+		assertEquals("", stdoutBuffer.toString());
 		assertEquals("Nice to meet you.", actor.getOutputValue("greeting"));
 	}
 
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
 		final IActor actor = new PythonActorBuilder()
-								.name("Hello")
-								.state("greeting")
-								.step("greeting='Nice to meet you.'")
-								.build();
+				     			 .outputStream(stdoutStream)
+			     			 	 .errorStream(stderrStream)
+								 .name("Hello")
+								 .state("greeting")
+								 .step("greeting='Nice to meet you.'")
+								 .build();
 
 		actor.configure();
 		actor.initialize();
@@ -205,19 +223,19 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL 
 			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
-		// run the workflow while capturing stdout and stderr 
-		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
-			public void execute() throws Exception {actor.step();}});
+		actor.step();
 			
 		// confirm expected stdout showing three values printed
-		assertEquals("", recorder.getStdoutRecording());
-		
+		assertEquals("", stderrBuffer.toString());
+		assertEquals("", stdoutBuffer.toString());
 		assertEquals("Nice to meet you.", actor.getStateValue("greeting"));
 	}
 	
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
 		final IActor actor = new PythonActorBuilder()
+				     			.outputStream(stdoutStream)
+				     			.errorStream(stderrStream)
 								.name("Multiplier")
 								.input("x")
 								.input("y")
@@ -284,13 +302,10 @@ public class TestPythonActor extends TestCase {
 			"" 																							+ EOL
 			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
-		// run the workflow while capturing stdout and stderr 
-		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
-			public void execute() throws Exception {actor.step();}});
-			
-		// confirm expected stdout showing three values printed
-		assertEquals("", recorder.getStdoutRecording());
+		actor.step();
 		
+		assertEquals("", stderrBuffer.toString());
+		assertEquals("", stdoutBuffer.toString());
 		assertEquals(36, actor.getOutputValue("z"));
 	}
 }

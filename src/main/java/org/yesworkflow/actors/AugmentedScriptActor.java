@@ -385,11 +385,11 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 		
 		if (_stderrMode == OutputStreamMode.DELAYED) {
-			System.out.print(adjustedStderr);
+			errStream.print(adjustedStderr);
 		}
 
 		if (_stdoutMode == OutputStreamMode.DELAYED) {
-			System.out.print(scriptStdout);
+			outStream.print(scriptStdout);
 		}
 
 		return serializedOutputs;
