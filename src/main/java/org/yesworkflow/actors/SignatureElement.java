@@ -1,10 +1,5 @@
 package org.yesworkflow.actors;
 
-/**
- * This class is thread safe. The types of all field values are immutable,
- * each field is either final or volatile, and no logic is performed jointly
- * on more than one field.
- */
 public abstract class SignatureElement {
 
 	private final String _label;

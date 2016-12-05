@@ -10,7 +10,7 @@ public class PythonActor extends AugmentedScriptActor {
 	}
 	
 	@Override
-	public PythonScriptAugmenter getNewScriptBuilder() {
+	public PythonScriptAugmenter getNewScriptAugmenter() {
 		return new PythonScriptAugmenter();
 	}
 		

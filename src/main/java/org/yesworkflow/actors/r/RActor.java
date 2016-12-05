@@ -21,7 +21,7 @@ public class RActor extends AugmentedScriptActor {
 	}
 	
 	@Override
-	public IActorScriptAugmenter getNewScriptBuilder() {
+	public IActorScriptAugmenter getNewScriptAugmenter() {
 		return new RScriptAugmenter();
 	}
 	

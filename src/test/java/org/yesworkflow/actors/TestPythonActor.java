@@ -12,7 +12,7 @@ public class TestPythonActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
-		final PythonActor actor = (PythonActor) new PythonActorBuilder()
+		final IActor actor = (PythonActor) new PythonActorBuilder()
 			.name("Hello")
 			.step("print('Hello world!')")
 			.build();
@@ -40,7 +40,7 @@ public class TestPythonActor extends TestCase {
 			"_outputMap = dict()"																		+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -99,7 +99,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))" 								+ EOL +
 			"" 																							+ EOL 
-			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -155,7 +155,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -203,7 +203,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -282,7 +282,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL
-			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {

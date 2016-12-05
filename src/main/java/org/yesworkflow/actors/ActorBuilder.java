@@ -90,4 +90,15 @@ public abstract class ActorBuilder implements IActorBuilder {
 		_types.putAll(types);
 		return this;
 	}
+	
+	public Actor build(Actor actor) throws Exception {
+		
+		actor.setName(_name);
+		actor.setInputs(_inputs);
+		actor.setOutputs(_outputs);
+		actor.setState(_state);
+		actor.setTypes(_types);
+		
+		return actor;
+	}
 }

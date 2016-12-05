@@ -8,6 +8,8 @@ public class PythonActorBuilder extends ActorBuilder {
 		
 		PythonActor actor = new PythonActor();
 		
+		super.build(actor);
+		
 		actor.setName(_name);
 		actor.setInputs(_inputs);
 		actor.setOutputs(_outputs);

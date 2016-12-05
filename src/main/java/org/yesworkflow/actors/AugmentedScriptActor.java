@@ -12,16 +12,20 @@ import org.yaml.snakeyaml.Yaml;
 import org.yesworkflow.actors.util.PortableIO;
 import org.yesworkflow.actors.util.PortableIO.StreamSink;
 
-public abstract class AugmentedScriptActor extends ScriptActor {
+public abstract class AugmentedScriptActor extends ScriptActor implements IAugmentedScriptActor {
 
 	static final protected String  _scriptOutputDelimiter = "__END_OF_SCRIPT_OUTPUT__";
 
 	public enum DataSerializationFormat { YAML, JSON };
 	
-	public abstract IActorScriptAugmenter getNewScriptBuilder();
+	@Override
+	public abstract IActorScriptAugmenter getNewScriptAugmenter();
+	@Override
 	public abstract String getScriptRunCommand();
+	@Override
 	public abstract DataSerializationFormat getOutputSerializationFormat();
 
+	@Override
 	public synchronized void configure() throws Exception {
 		
 		if (_configureScript != null && !_configureScript.trim().isEmpty()) {
@@ -41,7 +45,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String getAugmentedConfigureScript() throws IOException {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "configure");
 		_appendOriginalScript(augmentedScriptBuilder, _configureScript);
@@ -50,6 +54,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 	
 	
+	@Override
 	public synchronized void initialize() throws Exception {
 		
 		if (_initializeScript != null && !_initializeScript.trim().isEmpty()) {
@@ -69,7 +74,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String _getAugmentedInitializeScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "initialize");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -89,6 +94,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		return augmentedScriptBuilder.toString();
 	}
 	
+	@Override
 	public synchronized void step() throws Exception {
 	
 		if (_stepScript != null && !_stepScript.trim().isEmpty()) {
@@ -113,9 +119,10 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
+	@Override
 	public String getAugmentedStepScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "step");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -137,6 +144,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		return augmentedScriptBuilder.toString();
 	}
 	
+	@Override
 	public synchronized void wrapup() throws Exception {
 		
 		if (_wrapupScript != null && !_wrapupScript.trim().isEmpty()) {
@@ -151,7 +159,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 
 	protected String _getAugmentedWrapupScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "wrapup");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
@@ -162,6 +170,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		return augmentedScriptBuilder.toString();
 	}
 	
+	@Override
 	public synchronized void dispose() throws Exception {
 		
 		if (_disposeScript != null && !_disposeScript.trim().isEmpty()) {
@@ -176,7 +185,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	
 	protected String _getAugmentedDisposeScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptBuilder();
+		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "dispose");
 		_appendActorSettingInitializers(augmentedScriptBuilder);

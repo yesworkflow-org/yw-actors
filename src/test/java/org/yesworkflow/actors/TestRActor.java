@@ -1,6 +1,5 @@
 package org.yesworkflow.actors;
 
-import org.yesworkflow.actors.r.RActor;
 import org.yesworkflow.actors.r.RActorBuilder;
 import org.yesworkflow.actors.util.StdoutRecorder;
 
@@ -12,10 +11,10 @@ public class TestRActor extends TestCase {
 
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
-		final RActor actor = new RActorBuilder()
-			.name("Hello")
-			.step("cat('Hello world!')")
-			.build();
+		final IActor actor = new RActorBuilder()
+								.name("Hello")
+								.step("cat('Hello world!')")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -38,7 +37,7 @@ public class TestRActor extends TestCase {
 			"# Serialization of actor outputs"															+ EOL +
 			"outputList <- list();"																		+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -55,7 +54,7 @@ public class TestRActor extends TestCase {
 		
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
-		final RActor actor = new RActorBuilder()
+		final IActor actor = new RActorBuilder()
 			.name("Hello")
 			.input("greeting")
 			.step("cat(greeting, 'world!')")
@@ -98,7 +97,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledInputs=disabledInputs));"							+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -115,11 +114,11 @@ public class TestRActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
-		final RActor actor = new RActorBuilder()
-			.name("Hello")
-			.step("greeting<-'Nice to meet you.'")
-			.output("greeting")
-			.build();
+		final IActor actor = new RActorBuilder()
+								.name("Hello")
+								.step("greeting<-'Nice to meet you.'")
+								.output("greeting")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -155,7 +154,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledOutputs=disabledOutputs));"						+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -169,11 +168,11 @@ public class TestRActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
-		final RActor actor = new RActorBuilder()
-			.name("Hello")
-			.state("greeting")
-			.step("greeting <- 'Nice to meet you.'")
-			.build();
+		final IActor actor = new RActorBuilder()
+								.name("Hello")
+								.state("greeting")
+								.step("greeting <- 'Nice to meet you.'")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -201,7 +200,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(greeting=greeting));"										+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
@@ -218,16 +217,16 @@ public class TestRActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
-		final RActor actor = new RActorBuilder()
-			.name("Multiplier")
-			.input("x")
-			.input("y")
-			.step("z <- x * y")
-			.output("z")
-			.type("x", "Integer")
-			.type("y", "Integer")
-			.type("z", "Integer")
-			.build();
+		final IActor actor = new RActorBuilder()
+								.name("Multiplier")
+								.input("x")
+								.input("y")
+								.step("z <- x * y")
+								.output("z")
+								.type("x", "Integer")
+								.type("y", "Integer")
+								.type("z", "Integer")
+								.build();
 
 		actor.configure();
 		actor.initialize();
@@ -281,7 +280,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledOutputs=disabledOutputs));"						+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, actor.getAugmentedStepScript());
+			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		// run the workflow while capturing stdout and stderr 
 		StdoutRecorder recorder = new StdoutRecorder(new StdoutRecorder.WrappedCode() {
