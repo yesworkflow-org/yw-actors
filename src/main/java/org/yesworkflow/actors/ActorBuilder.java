@@ -11,14 +11,14 @@ public abstract class ActorBuilder implements IActorBuilder {
     protected PrintStream outStream = System.out;
     protected PrintStream errStream = System.err;
     
-	protected String				_name = "";
-	protected String 				_initialize = "";
-	protected String 				_step = "";
-	protected String 				_wrapup = "";
-	protected Map<String,Object>	_inputs = new HashMap<String,Object>(); 
-	protected Map<String,Object> 	_outputs = new HashMap<String,Object>(); 
-	protected Map<String,Object> 	_state = new HashMap<String,Object>();
-	protected Map<String,String> 	_types = new HashMap<String,String>();
+	protected String				actorName = "";
+	protected String 				initialize = "";
+	protected String 				step = "";
+	protected String 				wrapup = "";
+	protected Map<String,Object>	inputs = new HashMap<String,Object>(); 
+	protected Map<String,Object> 	outputs = new HashMap<String,Object>(); 
+	protected Map<String,Object> 	state = new HashMap<String,Object>();
+	protected Map<String,String> 	types = new HashMap<String,String>();
 
     
     public synchronized ActorBuilder errorStream(PrintStream errStream) {
@@ -37,67 +37,52 @@ public abstract class ActorBuilder implements IActorBuilder {
     }
 	
 	public ActorBuilder state(String name) {
-		_state.put(name,null);
+		state.put(name,null);
 		return this;
 	}
 	
-	public ActorBuilder initialize(String initialize) {
-		_initialize = initialize;
-		return this;
-	}
-	
-	public ActorBuilder step(String step) {
-		_step = step;
-		return this;
-	}
-
-	public ActorBuilder wrapup(String wrapup) {
-		_wrapup = wrapup;
-		return this;
-	}
-
 	public ActorBuilder input(String name) {
-		_inputs.put(name, null);
+		inputs.put(name, null);
 		return this;
 	}
 	
 	public ActorBuilder type(String variableName, String type) {
-		_types.put(variableName, type);
+		types.put(variableName, type);
 		return this;
 	}
 
 	public ActorBuilder input(String name, Map<String,Object> properties) {
-		_inputs.put(name, properties);
+		inputs.put(name, properties);
 		return this;
 	}	
 	
 	public ActorBuilder output(String name) {
-		_outputs.put(name, null);
+		outputs.put(name, null);
 		return this;
 	}
 
 	public ActorBuilder output(String name, Map<String,Object> properties) {
-		_outputs.put(name, properties);
+		outputs.put(name, properties);
 		return this;
 	}
 
 	public ActorBuilder name(String name) {
-		_name = name;
+		actorName = name;
 		return this;
 	}
 
 	public ActorBuilder types(Map<String, String> types) {
-		_types.putAll(types);
+		this.types.putAll(types);
 		return this;
 	}
 	
 	public Actor build(Actor actor) throws Exception {
 		
-		actor.setName(_name);
-		actor.setInputs(_inputs);
-		actor.setOutputs(_outputs);
-		actor.setState(_state);
-		actor.setTypes(_types);
+		actor.setName(actorName);
+		actor.setInputs(inputs);
+		actor.setOutputs(outputs);
+		actor.setState(state);
+		actor.setTypes(types);
 		
 		return actor;
 	}
