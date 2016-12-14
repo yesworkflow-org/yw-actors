@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class is the default base class for all implementations of the Actor
@@ -179,10 +180,9 @@ public abstract class Actor implements IActor {
 
 	
 	public synchronized void setInputs(Map<String, Object> inputs) throws Exception {
-
-		for (String label : inputs.keySet()) {
-			Object value = inputs.get(label);
-			_addInputToSignature(label, value);
+	    Map<String, Object> sortedInputs = new TreeMap<String, Object>(inputs);
+		for (Map.Entry<String,Object> input : sortedInputs.entrySet()) {
+			_addInputToSignature(input.getKey(), input.getValue());
 		}
 	}
 	
