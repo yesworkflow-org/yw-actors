@@ -1,6 +1,6 @@
 language: java
 
-script: mvn test
+sudo: required
 
 jdk:
   - openjdk7
@@ -13,3 +13,5 @@ addons:
 
 r_packages:
   - rjson
+
+script: mvn test
