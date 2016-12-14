@@ -5,29 +5,25 @@ import org.yesworkflow.actors.AugmentedScriptActor;
 
 public class RActor extends AugmentedScriptActor {
 
-	private static String OS_SPECIFIC_R_COMMAND;
+	private static String DEFAULT_R_COMMAND;
 	
 	static {
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			OS_SPECIFIC_R_COMMAND = "rterm --slave"; 
+	    if (System.getProperty("os.name").startsWith("Windows")) {
+	        DEFAULT_R_COMMAND = "rterm"; 
 		} else {
-			OS_SPECIFIC_R_COMMAND = "R --slave";
+		    DEFAULT_R_COMMAND = "R";
 		}
 	}
 	
 	public RActor() {
 		super();
-		_scriptExtension = "r";
+		super.scriptExtension = "r";
+		super.runcommand = String.format("%s --slave", DEFAULT_R_COMMAND);
 	}
 	
 	@Override
 	public IActorScriptAugmenter getNewScriptAugmenter() {
 		return new RScriptAugmenter();
-	}
-	
-	@Override
-	public synchronized String getScriptRunCommand() {
-		return OS_SPECIFIC_R_COMMAND;
 	}
 	
 	@Override

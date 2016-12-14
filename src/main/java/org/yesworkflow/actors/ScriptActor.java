@@ -10,7 +10,7 @@ public abstract class ScriptActor extends Actor implements IScriptActor {
     protected String _stepScript;
     protected String _wrapupScript;
     protected String _disposeScript;
-    protected String _scriptExtension;
+    protected String scriptExtension;
 	
     public  enum OutputStreamMode { DISCARD, DELAYED, IMMEDIATE }; 
     
@@ -21,7 +21,7 @@ public abstract class ScriptActor extends Actor implements IScriptActor {
 		synchronized(this) {
 			_stdoutMode = OutputStreamMode.DELAYED;
 		    _stderrMode = OutputStreamMode.DELAYED;
-		    _scriptExtension = "txt";
+		    scriptExtension = "txt";
 		}
 	}
 	

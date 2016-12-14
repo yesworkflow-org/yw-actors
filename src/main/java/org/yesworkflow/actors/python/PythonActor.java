@@ -4,21 +4,19 @@ import org.yesworkflow.actors.AugmentedScriptActor;
 
 public class PythonActor extends AugmentedScriptActor {
 	
+    public static String DEFAULT_PYTHON_COMMAND = "python"; 
+    
 	public PythonActor() {
 		super();
-		_scriptExtension = "py";
+		super.scriptExtension = "py";
+		super.runcommand = String.format("%s -", DEFAULT_PYTHON_COMMAND);
 	}
 	
 	@Override
 	public PythonScriptAugmenter getNewScriptAugmenter() {
 		return new PythonScriptAugmenter();
 	}
-		
-	@Override
-	public synchronized String getScriptRunCommand() {
-		return "python -";
-	}
-	
+			
 	@Override
 	public DataSerializationFormat getOutputSerializationFormat() {
 		return DataSerializationFormat.YAML;

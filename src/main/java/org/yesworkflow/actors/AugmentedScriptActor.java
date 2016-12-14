@@ -18,10 +18,11 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 
 	public enum DataSerializationFormat { YAML, JSON };
 	
+    protected String runcommand;
+	
 	@Override
 	public abstract IActorScriptAugmenter getNewScriptAugmenter();
-	@Override
-	public abstract String getScriptRunCommand();
+	
 	@Override
 	public abstract DataSerializationFormat getOutputSerializationFormat();
 
@@ -104,7 +105,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 			
 			// save the step script if the actor uses a step directory
 			if (this.usesStepDirectory()) {
-				File scriptFile = new File(_stepDirectory + "/" + "step." + _scriptExtension);
+				File scriptFile = new File(_stepDirectory + "/" + "step." + scriptExtension);
 				FileUtils.writeStringToFile(scriptFile, augmentedStepScript);
 			}
 
@@ -344,8 +345,6 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 	}
 	
 	protected synchronized String _runAugmentedScript(String augmentedScript) throws Exception {
-
-		String runcommand = getScriptRunCommand();
 		
 		StreamSink[] outputs = PortableIO.runProcess(
 									runcommand, 
