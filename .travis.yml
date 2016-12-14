@@ -1,10 +1,11 @@
+dist: trusty
+sudo: required
+
 before_install:
   - sudo apt-get install r-base
   - sudo R -e 'install.packages("rjson", repos="http://cran.cnr.berkeley.edu/")'
 
 language: java
-
-sudo: required
 
 jdk:
   - openjdk7
