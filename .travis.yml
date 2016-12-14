@@ -13,4 +13,8 @@ jdk:
   - openjdk7
   - oraclejdk7
 
+env:
+  - YW_PYTHON_COMMAND=python2
+  - YW_PYTHON_COMMAND=python3
+
 script: mvn test

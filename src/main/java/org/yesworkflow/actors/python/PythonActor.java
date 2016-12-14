@@ -4,12 +4,18 @@ import org.yesworkflow.actors.AugmentedScriptActor;
 
 public class PythonActor extends AugmentedScriptActor {
 	
-    public static String DEFAULT_PYTHON_COMMAND = "python"; 
+    public static String DEFAULT_PYTHON_COMMAND = "python";
     
 	public PythonActor() {
 		super();
 		super.scriptExtension = "py";
-		super.runcommand = String.format("%s -", DEFAULT_PYTHON_COMMAND);
+		
+		String ywPythonCommand = System.getenv("YW_PYTHON_COMMAND");
+		if (ywPythonCommand == null) {
+		    ywPythonCommand = DEFAULT_PYTHON_COMMAND;
+		}
+		super.runcommand = String.format("%s -", ywPythonCommand);
+		System.out.println("PYTHON RUN COMMAND = " + super.runcommand);
 	}
 	
 	@Override
