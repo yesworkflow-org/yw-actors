@@ -4,7 +4,7 @@ sudo: required
 before_install:
   - echo "deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list
   - sudo apt-get update
-  - sudo apt-get install r-base
+  - sudo apt-get install r-base --force-yes
   - sudo R -e 'install.packages("rjson", repos="http://cran.cnr.berkeley.edu/")'
 
 language: java
