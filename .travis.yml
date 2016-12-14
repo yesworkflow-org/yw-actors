@@ -2,7 +2,7 @@ dist: trusty
 sudo: required
 
 before_install:
-  - echo "deb https://http://cran.cnr.berkeley.edu/bin/linux/ubuntu trusty" | sudo tee -a /etc/apt/sources.list
+  - echo "deb http://cran.cnr.berkeley.edu/bin/linux/ubuntu trusty/" | sudo tee -a /etc/apt/sources.list
   - sudo apt-get install r-base
   - sudo R -e 'install.packages("rjson", repos="http://cran.cnr.berkeley.edu/")'
 
