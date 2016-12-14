@@ -1,3 +1,7 @@
+before_install:
+  sudo apt-get install r-base
+   r -e 'r=getOption("repos"); r["CRAN"]="http://cran.cnr.berkeley.edu/";options(repos=r);install.packages("rjson")'
+
 language: java
 
 sudo: required
@@ -5,13 +9,5 @@ sudo: required
 jdk:
   - openjdk7
   - oraclejdk7
-
-addons:
-  apt:
-    packages:
-    - r-base
-
-r_packages:
-  - rjson
 
 script: mvn test
