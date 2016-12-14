@@ -3,3 +3,7 @@ script: mvn test
 jdk:
   - openjdk7
   - oraclejdk7
+addons:
+  apt:
+    packages:
+    - r-base
