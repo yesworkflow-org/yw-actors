@@ -28,6 +28,8 @@ public class TestRActor extends TestCase {
     
         stderrBuffer = new ByteArrayOutputStream();
         stderrStream = new PrintStream(stderrBuffer);
+        
+        System.setProperty("yw.actors.r.command", "/usr/local/bin/R");
     }
     
     public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
