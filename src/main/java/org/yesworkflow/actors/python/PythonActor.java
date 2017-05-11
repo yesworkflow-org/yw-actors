@@ -15,7 +15,6 @@ public class PythonActor extends AugmentedScriptActor {
 		    ywPythonCommand = DEFAULT_PYTHON_COMMAND;
 		}
 		super.runcommand = String.format("%s -", ywPythonCommand);
-		System.out.println("PYTHON RUN COMMAND = " + super.runcommand);
 	}
 	
 	@Override
