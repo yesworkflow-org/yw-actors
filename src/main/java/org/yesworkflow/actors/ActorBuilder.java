@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ActorBuilder implements IActorBuilder {
+public abstract class ActorBuilder {
 
     protected InputStream inStream = System.in;
     protected PrintStream outStream = System.out;
@@ -76,6 +76,13 @@ public abstract class ActorBuilder implements IActorBuilder {
 		return this;
 	}
 	
+    public ActorBuilder step(String onStart) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public abstract Actor build() throws Exception;
+
 	public Actor build(Actor actor) throws Exception {
 		
 		actor.setName(actorName);

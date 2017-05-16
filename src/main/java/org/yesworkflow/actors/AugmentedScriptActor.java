@@ -12,7 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yesworkflow.actors.util.PortableIO;
 import org.yesworkflow.actors.util.PortableIO.StreamSink;
 
-public abstract class AugmentedScriptActor extends ScriptActor implements IAugmentedScriptActor {
+public abstract class AugmentedScriptActor extends ScriptActor {
 
 	static final protected String  _scriptOutputDelimiter = "__END_OF_SCRIPT_OUTPUT__";
 
@@ -20,10 +20,8 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 	
     protected String runcommand;
 	
-	@Override
-	public abstract IActorScriptAugmenter getNewScriptAugmenter();
+	public abstract ScriptAugmenter getNewScriptAugmenter();
 	
-	@Override
 	public abstract DataSerializationFormat getOutputSerializationFormat();
 
 	@Override
@@ -46,7 +44,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 	
 	protected String getAugmentedConfigureScript() throws IOException {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "configure");
 		_appendOriginalScript(augmentedScriptBuilder, _configureScript);
@@ -75,7 +73,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 	
 	protected String _getAugmentedInitializeScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "initialize");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -120,10 +118,9 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 	
-	@Override
 	public String getAugmentedStepScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "step");
 		_appendInputControlFunctions(augmentedScriptBuilder);
@@ -160,7 +157,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 
 	protected String _getAugmentedWrapupScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "wrapup");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
@@ -186,7 +183,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 	
 	protected String _getAugmentedDisposeScript() throws Exception {
 		
-		IActorScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "dispose");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
@@ -197,31 +194,31 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		return augmentedScriptBuilder.toString();
 	}
 	
-	protected void _appendScriptHeader(IActorScriptAugmenter script, String scriptType) throws IOException {
+	protected void _appendScriptHeader(ScriptAugmenter script, String scriptType) throws IOException {
 		script.appendComment("AUGMENTED " + scriptType.toUpperCase() + " SCRIPT FOR ACTOR " + this._name)
 		  	  .appendBlankLine()
-		  	  .appendScriptHeader(script, scriptType);
+		  	  .appendHeader(script, scriptType);
 	}
 
-	protected void _appendScriptSuffix(IActorScriptAugmenter script) {
+	protected void _appendScriptSuffix(ScriptAugmenter script) {
 		script.appendScriptExitCommand();
 	}
 
-	protected void _appendInputControlFunctions(IActorScriptAugmenter script) {
+	protected void _appendInputControlFunctions(ScriptAugmenter script) {
 		if (!_inputSignature.isEmpty()) {
 			script.appendInputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 	
-	protected void _appendOutputControlFunctions(IActorScriptAugmenter script) {
+	protected void _appendOutputControlFunctions(ScriptAugmenter script) {
 		if (!_outputSignature.isEmpty()) {
 			script.appendOutputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 
-	protected void _appendOutputVariableInitializers(IActorScriptAugmenter script) throws Exception {
+	protected void _appendOutputVariableInitializers(ScriptAugmenter script) throws Exception {
 		if (!_outputSignature.isEmpty()) {
 			script.appendComment("initialize actor outputs to null");
 			for (String name : _outputSignature.keySet()) {
@@ -231,7 +228,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 
-	protected void _appendActorStateVariableInitializers(IActorScriptAugmenter script, boolean hideInputs) throws Exception {
+	protected void _appendActorStateVariableInitializers(ScriptAugmenter script, boolean hideInputs) throws Exception {
 		if (!_stateVariables.isEmpty()) {
 			script.appendComment("initialize actor state variables");
 			Set<String> stateNames = new HashSet<String>(_stateVariables.keySet());
@@ -247,7 +244,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 	
-	protected void _appendActorInputVariableInitializers(IActorScriptAugmenter script) throws Exception {
+	protected void _appendActorInputVariableInitializers(ScriptAugmenter script) throws Exception {
 		if (!_inputSignature.isEmpty()) {
 			script.appendComment("initialize actor input variables");			
 			Set<String> inputNames = _inputSignature.keySet();
@@ -258,7 +255,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 	
-	protected void _appendActorSettingInitializers(IActorScriptAugmenter script) throws Exception {
+	protected void _appendActorSettingInitializers(ScriptAugmenter script) throws Exception {
 		if (!_constants.isEmpty()) {
 			script.appendComment("initialize actor setting");
 			Set<String> settingNames = _constants.keySet();
@@ -269,7 +266,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 
-	protected void _appendStepDirectoryEntryCommand(IActorScriptAugmenter script) {
+	protected void _appendStepDirectoryEntryCommand(ScriptAugmenter script) {
 		if (_actorStatus.getStepDirectory() != null) {
 			script.appendComment("change working directory to actor step directory")
 				  .appendChangeDirectory(_actorStatus.getStepDirectory().toString())
@@ -277,7 +274,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 	
-	protected void _appendOriginalScript(IActorScriptAugmenter script,String originalScript) {
+	protected void _appendOriginalScript(ScriptAugmenter script,String originalScript) {
 		script.appendComment("BEGINNING OF ORIGINAL SCRIPT")
 			  .appendBlankLine()
 			  .appendCode(originalScript)
@@ -286,23 +283,23 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 			  .appendBlankLine();
 	}
 	
-	protected void _appendOriginalScriptOutputDelimiter(IActorScriptAugmenter script) {
+	protected void _appendOriginalScriptOutputDelimiter(ScriptAugmenter script) {
 		script.appendComment("signal end of output from original script")
 			  .appendPrintStringStatement(_scriptOutputDelimiter)
 			  .appendBlankLine();
 	}
 	
-	protected void appendSerializationBeginStatement(IActorScriptAugmenter sb) {
+	protected void appendSerializationBeginStatement(ScriptAugmenter sb) {
 		sb.appendComment("Serialization of actor outputs");
 		sb.appendSerializationBeginStatement();
 	}
 	
-	protected void appendSerializationEndStatement(IActorScriptAugmenter sb) {
+	protected void appendSerializationEndStatement(ScriptAugmenter sb) {
 		sb.appendSerializationEndStatement();
 		sb.appendBlankLine();
 	}
 	
-	protected void _appendOutputVariableSerializationStatements(IActorScriptAugmenter script) {
+	protected void _appendOutputVariableSerializationStatements(ScriptAugmenter script) {
 		if (! _outputSignature.isEmpty()) {
 			Set<String> outputNames = new HashSet<String>(_outputSignature.keySet());
 			outputNames.removeAll(_stateVariables.keySet());
@@ -313,7 +310,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 
-	protected void _appendStateVariableSerializationStatements(IActorScriptAugmenter script) {
+	protected void _appendStateVariableSerializationStatements(ScriptAugmenter script) {
 		if (!_stateVariables.isEmpty()) {
 			for (String name : _stateVariables.keySet()) {
 				script.appendVariableSerializationStatement(name, _variableTypes.get(name));
@@ -322,7 +319,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 
-	protected void _appendInputControlVariableSerializationStatements(IActorScriptAugmenter script) {
+	protected void _appendInputControlVariableSerializationStatements(ScriptAugmenter script) {
 		if (!_inputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledInputs", "disabledInputs"}) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);
@@ -331,7 +328,7 @@ public abstract class AugmentedScriptActor extends ScriptActor implements IAugme
 		}
 	}
 	
-	protected void _appendOutputControlVariableSerializationStatements(IActorScriptAugmenter script) {
+	protected void _appendOutputControlVariableSerializationStatements(ScriptAugmenter script) {
 		if (! _outputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledOutputs", "disabledOutputs" }) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);

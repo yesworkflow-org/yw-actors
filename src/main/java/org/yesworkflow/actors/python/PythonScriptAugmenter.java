@@ -2,21 +2,13 @@ package org.yesworkflow.actors.python;
 
 import java.io.IOException;
 
-import org.yesworkflow.actors.IActorScriptAugmenter;
+import org.yesworkflow.actors.ScriptAugmenter;
 
 import com.google.gson.Gson;
 
-public class PythonScriptAugmenter implements IActorScriptAugmenter {
+public class PythonScriptAugmenter extends ScriptAugmenter {
 
-		protected StringBuilder _script = new StringBuilder();
-		private final static String EOL = System.getProperty("line.separator");
-
-		public IActorScriptAugmenter append(String text) {
-			_script.append(		text	);
-			return this;
-		}
-
-		public IActorScriptAugmenter appendCode(String code) {
+		public ScriptAugmenter appendCode(String code) {
 			_script.append(		code	)
 				   .append(		EOL		);
 			return this;
@@ -27,12 +19,6 @@ public class PythonScriptAugmenter implements IActorScriptAugmenter {
 				   .append(		EOL																							);
 			return this;
 		}
-
-		public PythonScriptAugmenter appendBlankLine() {
-			_script.append(	EOL	);
-			return this;
-		}
-
 		
 		public PythonScriptAugmenter appendComment(String text) {
 			_script.append(		"# "	)
@@ -41,8 +27,7 @@ public class PythonScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 
-		@Override
-		public IActorScriptAugmenter appendLiteralAssignment(String name, Object value, String type, boolean mutable, boolean nullable) throws Exception {
+		public ScriptAugmenter appendLiteralAssignment(String name, Object value, String type, boolean mutable, boolean nullable) throws Exception {
 
 		if (value == null) {
 				_assignNullLiteral(name);
@@ -220,14 +205,8 @@ public class PythonScriptAugmenter implements IActorScriptAugmenter {
 
 			return this;
 		}
-
 		
-		public String toString() {
-			return _script.toString();
-		}
-
-		@Override
-		public PythonScriptAugmenter appendScriptHeader(IActorScriptAugmenter script,
+		public PythonScriptAugmenter appendHeader(ScriptAugmenter script,
 				String scriptType) throws IOException {
 
 			appendComment("import packages required by all python actors");
@@ -238,7 +217,6 @@ public class PythonScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 
-		@Override
 		public PythonScriptAugmenter appendScriptExitCommand() {
 			return this;
 		}

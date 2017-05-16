@@ -1,19 +1,12 @@
 package org.yesworkflow.actors.r;
 
-import org.yesworkflow.actors.IActorScriptAugmenter;
+import org.yesworkflow.actors.ScriptAugmenter;
 
 import com.google.gson.Gson;
 
-public class RScriptAugmenter implements IActorScriptAugmenter {
+public class RScriptAugmenter extends ScriptAugmenter {
 
-		private StringBuilder _script = new StringBuilder();
-		private final static String EOL = System.getProperty("line.separator");
-
-		public IActorScriptAugmenter append(String text) {
-			_script.append(		text	);
-			return this;
-		}
-		public IActorScriptAugmenter appendCode(String code) {
+		public ScriptAugmenter appendCode(String code) {
 			
 			_script.append(		code	)
 				   .append(		EOL		);
@@ -29,14 +22,6 @@ public class RScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 
-		public RScriptAugmenter appendBlankLine() {
-			
-			_script.append(	EOL	);
-			
-			return this;
-		}
-
-		
 		public RScriptAugmenter appendComment(String text) {
 			
 			_script.append(		"# "	)
@@ -46,8 +31,7 @@ public class RScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 
-		@Override
-		public IActorScriptAugmenter appendLiteralAssignment(String name, Object value, String type, boolean mutable, boolean nullable) throws Exception {
+		public ScriptAugmenter appendLiteralAssignment(String name, Object value, String type, boolean mutable, boolean nullable) throws Exception {
 
 		if (value == null) {
 				_assignNullLiteral(name);
@@ -158,13 +142,11 @@ public class RScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 
-		@Override
 		public RScriptAugmenter appendSerializationBeginStatement() {
 			appendCode(		"outputList <- list();" 	);
 			return this;
 		}
 
-		@Override
 		public RScriptAugmenter appendSerializationEndStatement() {
 			_script.append( 	"cat(toJSON(outputList));"	);
 			return this;
@@ -216,12 +198,7 @@ public class RScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 		
-		public String toString() {
-			return _script.toString();
-		}
-
-		@Override
-		public RScriptAugmenter appendScriptHeader(IActorScriptAugmenter script, String scriptType) {
+		public RScriptAugmenter appendHeader(ScriptAugmenter script, String scriptType) {
 			
 			appendComment(		"load required libraries"		);
 			appendCode(			"library(rjson)"			);
@@ -230,12 +207,10 @@ public class RScriptAugmenter implements IActorScriptAugmenter {
 			return this;
 		}
 		
-		@Override
 		public RScriptAugmenter appendScriptExitCommand() {
 			return this;
 		}
 
-		@Override
 		public RScriptAugmenter appendOutputVariableSerializationStatement(
 				String name, String type) {
 			return appendVariableSerializationStatement(name, type);

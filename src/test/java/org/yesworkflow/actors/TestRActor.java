@@ -34,7 +34,7 @@ public class TestRActor extends TestCase {
     
     public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
-		final IActor actor = new RActorBuilder()
+		final Actor actor = new RActorBuilder()
 							     .outputStream(stdoutStream)
 							     .errorStream(stderrStream)
 								 .name("Hello")
@@ -62,7 +62,7 @@ public class TestRActor extends TestCase {
 			"# Serialization of actor outputs"															+ EOL +
 			"outputList <- list();"																		+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -72,13 +72,13 @@ public class TestRActor extends TestCase {
 		
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
-		final IActor actor = new RActorBuilder()
-			     				 .outputStream(stdoutStream)
-		     				 	 .errorStream(stderrStream)
-	 							 .name("Hello")
-								 .input("greeting")
-								 .step("cat(greeting, 'world!')")
-								 .build();
+		final Actor actor = new RActorBuilder()
+    	     				 .outputStream(stdoutStream)
+         				 	 .errorStream(stderrStream)
+    						 .name("Hello")
+    						 .input("greeting")
+    						 .step("cat(greeting, 'world!')")
+    						 .build();
 
 		actor.configure();
 		actor.initialize();
@@ -117,7 +117,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledInputs=disabledInputs));"							+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 
@@ -127,15 +127,15 @@ public class TestRActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
-		final IActor actor = new RActorBuilder()
-							     .outputStream(stdoutStream)
-							     .errorStream(stderrStream)
-								 .name("Hello")
-								 .step("greeting<-'Nice to meet you.'")
-								 .output("greeting")
-								 .build();
+	    final Actor actor = new RActorBuilder()
+                            .outputStream(stdoutStream)
+                            .errorStream(stderrStream)
+                            .name("Hello")
+                            .step("greeting<-'Nice to meet you.'")
+                            .output("greeting")
+                            .build();
 
-		actor.configure();
+	    actor.configure();
 		actor.initialize();
 		
 		assertEquals(
@@ -169,7 +169,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledOutputs=disabledOutputs));"						+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -180,7 +180,7 @@ public class TestRActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
-		final IActor actor = new RActorBuilder()
+		final Actor actor = new RActorBuilder()
 			     				.outputStream(stdoutStream)
 		     					.errorStream(stderrStream)
 								.name("Hello")
@@ -214,7 +214,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(greeting=greeting));"										+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -225,7 +225,7 @@ public class TestRActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
-		final IActor actor = new RActorBuilder()
+		final Actor actor = new RActorBuilder()
   						         .outputStream(stdoutStream)
 						         .errorStream(stderrStream)
 						         .name("Multiplier")
@@ -290,7 +290,7 @@ public class TestRActor extends TestCase {
 			"outputList <- c(outputList, list(disabledOutputs=disabledOutputs));"						+ EOL +
 			""																							+ EOL +
 			"cat(toJSON(outputList));"																	+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			

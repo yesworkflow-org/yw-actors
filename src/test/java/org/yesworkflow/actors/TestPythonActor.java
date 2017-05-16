@@ -33,7 +33,7 @@ public class TestPythonActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
-		final IActor actor = (PythonActor) new PythonActorBuilder()
+		final Actor actor = (PythonActor) new PythonActorBuilder()
 											   .outputStream(stdoutStream)
 											   .errorStream(stderrStream)
 											   .name("Hello")
@@ -63,7 +63,7 @@ public class TestPythonActor extends TestCase {
 			"_outputMap = dict()"																		+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 
@@ -73,7 +73,7 @@ public class TestPythonActor extends TestCase {
 		
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
-		final IActor actor = new PythonActorBuilder()
+		final Actor actor = new PythonActorBuilder()
  	 						     .outputStream(stdoutStream)
 							     .errorStream(stderrStream)
 								 .name("Hello")
@@ -120,7 +120,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))" 								+ EOL +
 			"" 																							+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -130,7 +130,7 @@ public class TestPythonActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
-		final IActor actor = new PythonActorBuilder()
+		final Actor actor = new PythonActorBuilder()
 				     			 .outputStream(stdoutStream)
 				     			 .errorStream(stderrStream)
 								 .name("Hello")
@@ -174,7 +174,7 @@ public class TestPythonActor extends TestCase {
 			""																							+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -185,7 +185,7 @@ public class TestPythonActor extends TestCase {
 
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
-		final IActor actor = new PythonActorBuilder()
+		final Actor actor = new PythonActorBuilder()
 				     			 .outputStream(stdoutStream)
 			     			 	 .errorStream(stderrStream)
 								 .name("Hello")
@@ -221,7 +221,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL 
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 			
@@ -233,7 +233,7 @@ public class TestPythonActor extends TestCase {
 	
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
-		final IActor actor = new PythonActorBuilder()
+		final Actor actor = new PythonActorBuilder()
 				     			.outputStream(stdoutStream)
 				     			.errorStream(stderrStream)
 								.name("Multiplier")
@@ -300,7 +300,7 @@ public class TestPythonActor extends TestCase {
 			""							 																+ EOL +
 			"if (len(_outputMap) > 0) :   print(json.dumps(_outputMap))"								+ EOL +
 			"" 																							+ EOL
-			, ((IAugmentedScriptActor)actor).getAugmentedStepScript());
+			, ((AugmentedScriptActor)actor).getAugmentedStepScript());
 		
 		actor.step();
 		

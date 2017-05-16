@@ -14,8 +14,19 @@ import java.util.TreeMap;
  * This class is the default base class for all implementations of the Actor
  * interface. 
  */
-public abstract class Actor implements IActor {
+public abstract class Actor {
 	
+    enum ActorFSM {
+        CONSTRUCTED,
+        PROPERTIES_SET,
+        ELABORATED,
+        CONFIGURED,
+        INITIALIZED,
+        STEPPED,
+        WRAPPED_UP,
+        DISPOSED
+    }
+    
 	///////////////////////////////////////////////////////////////////////////
 	////                    private instance fields                        ////
 	

@@ -2,10 +2,11 @@ package org.yesworkflow.actors;
 
 public abstract class ScriptActorBuilder extends ActorBuilder {
 	
-	public ActorBuilder initialize(String initialize) {
-		this.initialize = initialize;
-		return this;
-	}
+//    @Override
+//	public ActorBuilder initialize(String initialize) {
+//		this.initialize = initialize;
+//		return this;
+//	}
 	
 	public ActorBuilder step(String step) {
 		this.step = step;

@@ -3,7 +3,7 @@ package org.yesworkflow.actors;
 import java.io.File;
 import java.util.Map;
 
-public abstract class ScriptActor extends Actor implements IScriptActor {
+public abstract class ScriptActor extends Actor {
 	
 	protected String _configureScript;
     protected String _initializeScript;

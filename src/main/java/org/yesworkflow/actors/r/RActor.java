@@ -1,6 +1,6 @@
 package org.yesworkflow.actors.r;
 
-import org.yesworkflow.actors.IActorScriptAugmenter;
+import org.yesworkflow.actors.ScriptAugmenter;
 import org.yesworkflow.actors.AugmentedScriptActor;
 
 public class RActor extends AugmentedScriptActor {
@@ -30,7 +30,7 @@ public class RActor extends AugmentedScriptActor {
 	}
 	
 	@Override
-	public IActorScriptAugmenter getNewScriptAugmenter() {
+	public ScriptAugmenter getNewScriptAugmenter() {
 		return new RScriptAugmenter();
 	}
 	
