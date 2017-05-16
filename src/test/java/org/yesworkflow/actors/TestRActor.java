@@ -35,10 +35,10 @@ public class TestRActor extends TestCase {
     public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
 		final Actor actor = new RActorBuilder()
+                                 .step("cat('Hello world!')")
 							     .outputStream(stdoutStream)
 							     .errorStream(stderrStream)
 								 .name("Hello")
-								 .step("cat('Hello world!')")
 								 .build();
 
 		actor.configure();
@@ -73,12 +73,12 @@ public class TestRActor extends TestCase {
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
 		final Actor actor = new RActorBuilder()
-    	     				 .outputStream(stdoutStream)
-         				 	 .errorStream(stderrStream)
-    						 .name("Hello")
-    						 .input("greeting")
-    						 .step("cat(greeting, 'world!')")
-    						 .build();
+                            .step("cat(greeting, 'world!')")
+    	     				.outputStream(stdoutStream)
+         				 	.errorStream(stderrStream)
+    						.name("Hello")
+    						.input("greeting")
+    						.build();
 
 		actor.configure();
 		actor.initialize();
@@ -128,10 +128,10 @@ public class TestRActor extends TestCase {
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
 	    final Actor actor = new RActorBuilder()
+                            .step("greeting<-'Nice to meet you.'")
                             .outputStream(stdoutStream)
                             .errorStream(stderrStream)
                             .name("Hello")
-                            .step("greeting<-'Nice to meet you.'")
                             .output("greeting")
                             .build();
 
@@ -181,12 +181,12 @@ public class TestRActor extends TestCase {
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
 		final Actor actor = new RActorBuilder()
-			     				.outputStream(stdoutStream)
-		     					.errorStream(stderrStream)
-								.name("Hello")
-								.state("greeting")
-								.step("greeting <- 'Nice to meet you.'")
-								.build();
+                            .step("greeting <- 'Nice to meet you.'")
+			     			.outputStream(stdoutStream)
+		     				.errorStream(stderrStream)
+							.name("Hello")
+							.state("greeting")
+							.build();
 
 		actor.configure();
 		actor.initialize();
@@ -226,17 +226,17 @@ public class TestRActor extends TestCase {
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
 		final Actor actor = new RActorBuilder()
-  						         .outputStream(stdoutStream)
-						         .errorStream(stderrStream)
-						         .name("Multiplier")
-						         .input("x")
-						         .input("y")
-						         .step("z <- x * y")
-						         .output("z")
-						         .type("x", "Integer")
-						         .type("y", "Integer")
-						         .type("z", "Integer")
-						         .build();
+                            .step("z <- x * y")
+  						    .outputStream(stdoutStream)
+						    .errorStream(stderrStream)
+						    .name("Multiplier")
+						    .input("x")
+						    .input("y")
+						    .output("z")
+						    .type("x", "Integer")
+						    .type("y", "Integer")
+						    .type("z", "Integer")
+						    .build();
 
 		actor.configure();
 		actor.initialize();

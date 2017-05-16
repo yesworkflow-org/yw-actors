@@ -34,11 +34,11 @@ public class TestPythonActor extends TestCase {
 	public void testGetAugmentedStepScript_NoInputsOutputsOrState() throws Exception {
 
 		final Actor actor = (PythonActor) new PythonActorBuilder()
-											   .outputStream(stdoutStream)
-											   .errorStream(stderrStream)
-											   .name("Hello")
-											   .step("print('Hello world!')")
-											   .build();
+                                          .step("print('Hello world!')")
+                                          .outputStream(stdoutStream)
+                                          .errorStream(stderrStream)
+                                          .name("Hello")
+										  .build();
 
 		actor.configure();
 		actor.initialize();
@@ -74,12 +74,12 @@ public class TestPythonActor extends TestCase {
 	public void testGetAugmentedStepScript_WithInputs_NoOutputsOrState() throws Exception {
 
 		final Actor actor = new PythonActorBuilder()
- 	 						     .outputStream(stdoutStream)
-							     .errorStream(stderrStream)
-								 .name("Hello")
-								 .input("greeting")
-								 .step("print(greeting + ' world!')")
-								 .build();
+                            .step("print(greeting + ' world!')")
+ 	 						.outputStream(stdoutStream)
+							.errorStream(stderrStream)
+							.name("Hello")
+							.input("greeting")
+							.build();
 
 		actor.configure();
 		actor.initialize();
@@ -131,12 +131,12 @@ public class TestPythonActor extends TestCase {
 	public void testGetAugmentedStepScript_WithOutputs_NoInputsOrState() throws Exception {
 
 		final Actor actor = new PythonActorBuilder()
-				     			 .outputStream(stdoutStream)
-				     			 .errorStream(stderrStream)
-								 .name("Hello")
-								 .step("greeting='Nice to meet you.'")
-								 .output("greeting")
-								 .build();
+                            .step("greeting='Nice to meet you.'")
+				     		.outputStream(stdoutStream)
+				     		.errorStream(stderrStream)
+							.name("Hello")
+							.output("greeting")
+							.build();
 
 		actor.configure();
 		actor.initialize();
@@ -186,12 +186,12 @@ public class TestPythonActor extends TestCase {
 	public void testGetAugmentedStepScript_WithState_NoInputsOrOutput() throws Exception {
 
 		final Actor actor = new PythonActorBuilder()
-				     			 .outputStream(stdoutStream)
-			     			 	 .errorStream(stderrStream)
-								 .name("Hello")
-								 .state("greeting")
-								 .step("greeting='Nice to meet you.'")
-								 .build();
+                            .step("greeting='Nice to meet you.'")
+				     	    .outputStream(stdoutStream)
+			     			.errorStream(stderrStream)
+							.name("Hello")
+							.state("greeting")
+							.build();
 
 		actor.configure();
 		actor.initialize();
@@ -234,12 +234,12 @@ public class TestPythonActor extends TestCase {
 	public void testGetAugmentedStepScript_WithInputsAndOutput_NoState() throws Exception {
 
 		final Actor actor = new PythonActorBuilder()
+                                .step("z = x * y")
 				     			.outputStream(stdoutStream)
 				     			.errorStream(stderrStream)
 								.name("Multiplier")
 								.input("x")
 								.input("y")
-								.step("z = x * y")
 								.output("z")
 								.type("x", "Integer")
 								.type("y", "Integer")

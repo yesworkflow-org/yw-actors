@@ -66,20 +66,20 @@ public abstract class ScriptActor extends Actor {
 	}
 		
 	protected synchronized void _updateStateVariables(Map<String,Object> variables) {
-		for (String label : _stateVariables.keySet()) {
+		for (String label : stateVariables.keySet()) {
 			Object value = variables.get(label);
-			_stateVariables.put(label, value);
+			stateVariables.put(label, value);
 		}
 	}
 		
 	protected synchronized void _updateOutputVariables(Map<String,Object> variables) throws Exception {
 		
-		for (String label : _outputSignature.keySet()) {
+		for (String label : outputSignature.keySet()) {
 
-			if (_actorStatus.getOutputEnable(label)) {
+			if (actorStatus.getOutputEnable(label)) {
 				
 				if (!variables.containsKey(label)) {
-					throw new Exception("Actor " + _name + " did not output a value for " + label);
+					throw new Exception("Actor " + name + " did not output a value for " + label);
 				}	
 			
 				Object value = variables.get(label);				
@@ -94,10 +94,10 @@ public abstract class ScriptActor extends Actor {
 	
 	protected synchronized void _storeOutputValue(String label, Object value) throws Exception {	
 		
-		if (value == null && !_outputSignature.get(label).isNullable()) {
+		if (value == null && !outputSignature.get(label).isNullable()) {
 			throw new Exception("Null data output by actor " + label);
 		}
 		
-		_outputValues.put(label, value);
+		outputValues.put(label, value);
 	}
 }

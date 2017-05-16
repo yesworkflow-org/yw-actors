@@ -82,7 +82,7 @@ public class GroovyActor extends ScriptActor {
 			_bindConstants(binding);
 			_bindStateVariables(binding);
 			_bindInputs(binding);
-			binding.setVariable("_outputs", _outputSignature.keySet());
+			binding.setVariable("_outputs", outputSignature.keySet());
 			bindSpecial(binding);
 			bindDirectories(binding);
 
@@ -140,7 +140,7 @@ public class GroovyActor extends ScriptActor {
 		
 		runTheScript(script, binding);
 		
-		_actorStatus = (ActorStatus)binding.getVariable("_status");
+		actorStatus = (ActorStatus)binding.getVariable("_status");
 		
 		_updateStateVariables((Map<String,Object>)binding.getVariables());
 	}
@@ -186,12 +186,12 @@ public class GroovyActor extends ScriptActor {
 	
 	private synchronized void bindSpecial(Binding binding) {
 		
-		binding.setVariable("_inputs", _inputValues);
-		binding.setVariable("_states", _stateVariables);
-		binding.setVariable("_status" , _actorStatus);
-		binding.setVariable("_type", _variableTypes);
+		binding.setVariable("_inputs", inputValues);
+		binding.setVariable("_states", stateVariables);
+		binding.setVariable("_status" , actorStatus);
+		binding.setVariable("_type", variableTypes);
 		binding.setVariable("_this" , this);
-		binding.setVariable("STEP", _actorStatus.getStepCount());
+		binding.setVariable("STEP", actorStatus.getStepCount());
 	}
 	
 	private synchronized void bindDirectories(Binding binding) throws Exception {
@@ -206,22 +206,22 @@ public class GroovyActor extends ScriptActor {
 	}
 
 	private synchronized void _bindConstants(Binding binding) {
-		for (String name: _constants.keySet()) {
-			Object value = _constants.get(name);
+		for (String name: constants.keySet()) {
+			Object value = constants.get(name);
 			binding.setVariable(name,value);
 		}
 	}
 
 	private synchronized void _bindStateVariables(Binding binding) {
-		for (String name: _stateVariables.keySet()) {
-			Object value = _stateVariables.get(name);
+		for (String name: stateVariables.keySet()) {
+			Object value = stateVariables.get(name);
 			binding.setVariable(name, value);
 		}
 	}	
 	
 	private synchronized void _bindInputs(Binding binding) {
-		for (String name: _inputSignature.keySet()) {
-			binding.setVariable( name, _inputValues.get(name) );
+		for (String name: inputSignature.keySet()) {
+			binding.setVariable( name, inputValues.get(name) );
 		}
 	}	
 }

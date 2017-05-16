@@ -5,148 +5,144 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-/**
- * This class is thread safe.  All of its mutable fields are synchronized on the instance.
- */
 public class ActorStatus implements Cloneable {
 
-	private int 				_stepCount;
-	private String 				_callType;
-	private Map<String,Boolean> _inputEnableMap;
-	private Map<String,Boolean> _outputEnableMap;
-	private Map<String,Boolean> _outputStreamClosedMap;
-	private File 				_stepDirectory;
+	private String 				callType;
+	private Map<String,Boolean> inputEnableMap;
+	private Map<String,Boolean> outputEnableMap;
+	private Map<String,Boolean> outputStreamClosedMap;
+    private int                 stepCount;
+	private File 				stepDirectory;
 
 	public ActorStatus() {
-		
 		synchronized(this) {
-			_stepCount = 0;
-			_inputEnableMap = new Hashtable<String, Boolean>();
-			_outputEnableMap = new Hashtable<String, Boolean>();
-			_outputStreamClosedMap = new Hashtable<String,Boolean>();
+			inputEnableMap = new Hashtable<String, Boolean>();
+			outputEnableMap = new Hashtable<String, Boolean>();
+			outputStreamClosedMap = new Hashtable<String,Boolean>();
+            stepCount = 0;
 		}
 	}
 	
 	public synchronized Object clone() throws CloneNotSupportedException {
 		ActorStatus theClone = (ActorStatus) super.clone();
 		
-		theClone._inputEnableMap = new Hashtable<String,Boolean>(_inputEnableMap);
-		theClone._outputEnableMap = new Hashtable<String,Boolean>(_outputEnableMap);
-		theClone._outputStreamClosedMap = new Hashtable<String,Boolean>(_outputStreamClosedMap);
+		theClone.inputEnableMap = new Hashtable<String,Boolean>(inputEnableMap);
+		theClone.outputEnableMap = new Hashtable<String,Boolean>(outputEnableMap);
+		theClone.outputStreamClosedMap = new Hashtable<String,Boolean>(outputStreamClosedMap);
 		
 		return theClone;
 	}
 
 	
 	public synchronized void setStepDirectory(File directory) {
-		_stepDirectory = directory;
+		this.stepDirectory = directory;
 	}
 	
 	public synchronized File getStepDirectory() {
-		return _stepDirectory;
+		return stepDirectory;
 	}
 	
 	public synchronized void setReadyForInput(String label, Boolean value) {
-		_inputEnableMap.put(label, value);
+		inputEnableMap.put(label, value);
 	}
 
 	public synchronized void enableInputs() {
-		for (String label : _inputEnableMap.keySet()) {
-			_inputEnableMap.put(label, true);
+		for (String label : inputEnableMap.keySet()) {
+			inputEnableMap.put(label, true);
 		}
 	}
 
 	public synchronized void enableOutputs() {
-		for (String label : _outputEnableMap.keySet()) {
-			_outputEnableMap.put(label, true);
+		for (String label : outputEnableMap.keySet()) {
+			outputEnableMap.put(label, true);
 		}
 	}
 	
 	public synchronized void disableInputs() {
-		for (String label : _inputEnableMap.keySet()) {
-			_inputEnableMap.put(label, false);
+		for (String label : inputEnableMap.keySet()) {
+			inputEnableMap.put(label, false);
 		}
 	}
 	
 	public synchronized void disableOutputs() {
-		for (String label : _outputEnableMap.keySet()) {
-			_outputEnableMap.put(label, false);
+		for (String label : outputEnableMap.keySet()) {
+			outputEnableMap.put(label, false);
 		}
 	}	
 	
 	public synchronized void enableInput(String label) {
-		_inputEnableMap.put(label, true);
+		inputEnableMap.put(label, true);
 	}
 	
 	public synchronized void disableInput(String label) {
-		_inputEnableMap.put(label, false);
+		inputEnableMap.put(label, false);
 	}
 
 	public synchronized void enableOutput(String label) {
-		_outputEnableMap.put(label, true);
+		outputEnableMap.put(label, true);
 	}
 	
 	public synchronized void disableOutput(String label) {
-		_outputEnableMap.put(label, false);
+		outputEnableMap.put(label, false);
 	}	
 
 	// TODO Make sure there is an input enable flag for each input
 	public synchronized boolean getInputEnable(String label) {
-		Boolean inputReady = _inputEnableMap.get(label);
+		Boolean inputReady = inputEnableMap.get(label);
 		return (inputReady == null || inputReady);
 	}
 	
 	public synchronized void setOutputEnable(String label, Boolean value) {
-		_outputEnableMap.put(label, value);
+		outputEnableMap.put(label, value);
 	}
 
 	// TODO Make sure there is an output enable flag for each output
 	public synchronized boolean getOutputEnable(String label) {
-		Boolean ready = _outputEnableMap.get(label);
+		Boolean ready = outputEnableMap.get(label);
 		return (ready == null || ready);
 	}
 	
 	public synchronized void setOutputStreamClosed(String label) {
-		_outputStreamClosedMap.put(label, true);
+		outputStreamClosedMap.put(label, true);
 	}
 	
 	public synchronized boolean outputStreamClosed(String label) {
-		return _outputStreamClosedMap.get(label);
+		return outputStreamClosedMap.get(label);
 	}
 	
 	public synchronized int getStepCount() {
-		return _stepCount;
+		return stepCount;
 	}
 	
 	public synchronized int getStepCountIndex() {
-		return _stepCount - 1;
+		return stepCount - 1;
 	}
 
 	public synchronized String getCallType() {
-		return _callType;
+		return callType;
 	}
 
 	public synchronized void setCallType(String callType) {
-		_callType = callType;
+		this.callType = callType;
 	}
 
 	public synchronized void setStepCount(int count) {
-		_stepCount = count;
+		stepCount = count;
 	}
 	
 	public synchronized ActorState copyState() {
 		ActorState state = new ActorState();
-		state.setStepCount( _stepCount );
+		state.setStepCount( stepCount );
 
 		Map<String,Boolean> inputEnableMap = new HashMap<String,Boolean>();
-		for ( String key : _inputEnableMap.keySet() ) {
-			inputEnableMap.put(key, _inputEnableMap.get(key).booleanValue() );
+		for ( String key : inputEnableMap.keySet() ) {
+			inputEnableMap.put(key, inputEnableMap.get(key).booleanValue() );
 		}
 		state.setInputEnableMap(inputEnableMap);
 		
 		Map<String,Boolean> outputEnableMap = new HashMap<String,Boolean>();
-		for ( String key : _outputEnableMap.keySet() ) {
-			outputEnableMap.put(key, _outputEnableMap.get(key).booleanValue() );
+		for (String key : outputEnableMap.keySet() ) {
+			outputEnableMap.put(key, outputEnableMap.get(key).booleanValue() );
 		}
 		state.setOutputEnableMap(outputEnableMap);		
 		

@@ -103,7 +103,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			
 			// save the step script if the actor uses a step directory
 			if (this.usesStepDirectory()) {
-				File scriptFile = new File(_stepDirectory + "/" + "step." + scriptExtension);
+				File scriptFile = new File(stepDirectory + "/" + "step." + scriptExtension);
 				FileUtils.writeStringToFile(scriptFile, augmentedStepScript);
 			}
 
@@ -195,7 +195,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 	
 	protected void _appendScriptHeader(ScriptAugmenter script, String scriptType) throws IOException {
-		script.appendComment("AUGMENTED " + scriptType.toUpperCase() + " SCRIPT FOR ACTOR " + this._name)
+		script.appendComment("AUGMENTED " + scriptType.toUpperCase() + " SCRIPT FOR ACTOR " + this.name)
 		  	  .appendBlankLine()
 		  	  .appendHeader(script, scriptType);
 	}
@@ -205,71 +205,71 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 
 	protected void _appendInputControlFunctions(ScriptAugmenter script) {
-		if (!_inputSignature.isEmpty()) {
+		if (!inputSignature.isEmpty()) {
 			script.appendInputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 	
 	protected void _appendOutputControlFunctions(ScriptAugmenter script) {
-		if (!_outputSignature.isEmpty()) {
+		if (!outputSignature.isEmpty()) {
 			script.appendOutputControlFunctions()
 			  	  .appendBlankLine();
 		}
 	}
 
 	protected void _appendOutputVariableInitializers(ScriptAugmenter script) throws Exception {
-		if (!_outputSignature.isEmpty()) {
+		if (!outputSignature.isEmpty()) {
 			script.appendComment("initialize actor outputs to null");
-			for (String name : _outputSignature.keySet()) {
-				script.appendLiteralAssignment(name, null, _variableTypes.get(name), false, _outputSignature.get(name).isNullable());
+			for (String name : outputSignature.keySet()) {
+				script.appendLiteralAssignment(name, null, variableTypes.get(name), false, outputSignature.get(name).isNullable());
 			}
 			script.appendBlankLine();
 		}
 	}
 
 	protected void _appendActorStateVariableInitializers(ScriptAugmenter script, boolean hideInputs) throws Exception {
-		if (!_stateVariables.isEmpty()) {
+		if (!stateVariables.isEmpty()) {
 			script.appendComment("initialize actor state variables");
-			Set<String> stateNames = new HashSet<String>(_stateVariables.keySet());
+			Set<String> stateNames = new HashSet<String>(stateVariables.keySet());
 			if (hideInputs) {
-				stateNames.removeAll(_inputSignature.keySet());
+				stateNames.removeAll(inputSignature.keySet());
 			}
 			for (String key : stateNames) {
-				InputSignatureElement input = (InputSignatureElement)(_inputSignature.get(key));
+				InputSignatureElement input = (InputSignatureElement)(inputSignature.get(key));
 				boolean nullable = input != null && input.isNullable();
-				script.appendLiteralAssignment(key, _stateVariables.get(key), _variableTypes.get(key), true, nullable);
+				script.appendLiteralAssignment(key, stateVariables.get(key), variableTypes.get(key), true, nullable);
 			}
 			script.appendBlankLine();
 		}
 	}
 	
 	protected void _appendActorInputVariableInitializers(ScriptAugmenter script) throws Exception {
-		if (!_inputSignature.isEmpty()) {
+		if (!inputSignature.isEmpty()) {
 			script.appendComment("initialize actor input variables");			
-			Set<String> inputNames = _inputSignature.keySet();
+			Set<String> inputNames = inputSignature.keySet();
 			for (String key : inputNames) {
-				script.appendLiteralAssignment(key, _inputValues.get(key), _variableTypes.get(key), false, _inputSignature.get(key).isNullable());
+				script.appendLiteralAssignment(key, inputValues.get(key), variableTypes.get(key), false, inputSignature.get(key).isNullable());
 			}
 			script.appendBlankLine();
 		}
 	}
 	
 	protected void _appendActorSettingInitializers(ScriptAugmenter script) throws Exception {
-		if (!_constants.isEmpty()) {
+		if (!constants.isEmpty()) {
 			script.appendComment("initialize actor setting");
-			Set<String> settingNames = _constants.keySet();
+			Set<String> settingNames = constants.keySet();
 			for (String key : settingNames) {
-				script.appendLiteralAssignment(key, _constants.get(key), _variableTypes.get(key), false, false);
+				script.appendLiteralAssignment(key, constants.get(key), variableTypes.get(key), false, false);
 			}
 			script.appendBlankLine();
 		}
 	}
 
 	protected void _appendStepDirectoryEntryCommand(ScriptAugmenter script) {
-		if (_actorStatus.getStepDirectory() != null) {
+		if (actorStatus.getStepDirectory() != null) {
 			script.appendComment("change working directory to actor step directory")
-				  .appendChangeDirectory(_actorStatus.getStepDirectory().toString())
+				  .appendChangeDirectory(actorStatus.getStepDirectory().toString())
 				  .appendBlankLine();
 		}
 	}
@@ -300,27 +300,27 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 	
 	protected void _appendOutputVariableSerializationStatements(ScriptAugmenter script) {
-		if (! _outputSignature.isEmpty()) {
-			Set<String> outputNames = new HashSet<String>(_outputSignature.keySet());
-			outputNames.removeAll(_stateVariables.keySet());
+		if (! outputSignature.isEmpty()) {
+			Set<String> outputNames = new HashSet<String>(outputSignature.keySet());
+			outputNames.removeAll(stateVariables.keySet());
 			for (String name : outputNames) {
-			    script.appendOutputVariableSerializationStatement(name, _variableTypes.get(name));
+			    script.appendOutputVariableSerializationStatement(name, variableTypes.get(name));
 			}
 			script.appendBlankLine();
 		}
 	}
 
 	protected void _appendStateVariableSerializationStatements(ScriptAugmenter script) {
-		if (!_stateVariables.isEmpty()) {
-			for (String name : _stateVariables.keySet()) {
-				script.appendVariableSerializationStatement(name, _variableTypes.get(name));
+		if (!stateVariables.isEmpty()) {
+			for (String name : stateVariables.keySet()) {
+				script.appendVariableSerializationStatement(name, variableTypes.get(name));
 			}
 			script.appendBlankLine();
 		}
 	}
 
 	protected void _appendInputControlVariableSerializationStatements(ScriptAugmenter script) {
-		if (!_inputSignature.isEmpty()) {
+		if (!inputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledInputs", "disabledInputs"}) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);
 			}
@@ -329,7 +329,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 	
 	protected void _appendOutputControlVariableSerializationStatements(ScriptAugmenter script) {
-		if (! _outputSignature.isEmpty()) {
+		if (! outputSignature.isEmpty()) {
 			for (String name : new String[]{ "enabledOutputs", "disabledOutputs" }) {
 			    script.appendNonNullStringVariableSerializationPrintStatement(name);
 			}
@@ -347,7 +347,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 									runcommand, 
 					  				augmentedScript,
 					  				null, 
-					  				_actorStatus.getStepDirectory()
+					  				actorStatus.getStepDirectory()
 		  						 );
 		
 		// capture the standard output from the run of the script
@@ -442,11 +442,11 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 				for (Map.Entry<String,Object> entry : outputMap.entrySet()) { 
 					String key = entry.getKey();
 					Object value = entry.getValue();
-					Object variableType = _variableTypes.get(key);
+					Object variableType = variableTypes.get(key);
 					if (value != null && value.equals("null")) {
 						binding.put(key, null);
 					} else if (variableType != null && variableType.equals("File")) {
-				    	binding.put(key, new File(_actorStatus.getStepDirectory(), value.toString()));
+				    	binding.put(key, new File(actorStatus.getStepDirectory(), value.toString()));
 				    } else {
 				    	binding.put(key, value);
 				    }
@@ -462,28 +462,28 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		String enabledInputs = (String) binding.get("enabledInputs");
 		if (enabledInputs != null) {
 			for (String name : enabledInputs.split(" ")) {
-				_actorStatus.enableInput(name);
+				actorStatus.enableInput(name);
 			}
 		}
 		  
 		String enabledOutputs = (String) binding.get("enabledOutputs");
 		if (enabledOutputs != null) {
 			for (String name : enabledOutputs.split(" ")) {
-				_actorStatus.enableOutput(name);
+				actorStatus.enableOutput(name);
 			}
 		}
 		  
 		String disabledInputs = (String) binding.get("disabledInputs");
 		if (disabledInputs != null) {
 			for (String name : disabledInputs.split(" ")) {
-				_actorStatus.disableInput(name);
+				actorStatus.disableInput(name);
 			}
 		}
 		  
 		String disabledOutputs = (String) binding.get("disabledOutputs");
 		if (disabledOutputs != null) {
 			for (String name : disabledOutputs.split(" ")) {
-				_actorStatus.disableOutput(name);
+				actorStatus.disableOutput(name);
 			}
 		}
 	}

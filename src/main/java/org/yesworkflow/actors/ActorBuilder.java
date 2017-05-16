@@ -12,26 +12,22 @@ public abstract class ActorBuilder {
     protected PrintStream errStream = System.err;
     
 	protected String				actorName = "";
-	protected String 				initialize = "";
-	protected String 				step = "";
-	protected String 				wrapup = "";
 	protected Map<String,Object>	inputs = new HashMap<String,Object>(); 
 	protected Map<String,Object> 	outputs = new HashMap<String,Object>(); 
 	protected Map<String,Object> 	state = new HashMap<String,Object>();
 	protected Map<String,String> 	types = new HashMap<String,String>();
-
     
-    public synchronized ActorBuilder errorStream(PrintStream errStream) {
+    public ActorBuilder errorStream(PrintStream errStream) {
         this.errStream = errStream;
         return this;
     }
 
-    public synchronized ActorBuilder inputStream(InputStream inStream) {
+    public ActorBuilder inputStream(InputStream inStream) {
         this.inStream = inStream;
         return this;
     }
     
-    public synchronized ActorBuilder outputStream(PrintStream outStream) {
+    public ActorBuilder outputStream(PrintStream outStream) {
         this.outStream = outStream;
         return this;
     }
@@ -75,16 +71,8 @@ public abstract class ActorBuilder {
 		this.types.putAll(types);
 		return this;
 	}
-	
-    public ActorBuilder step(String onStart) {
-        // TODO Auto-generated method stub
-        return null;
-    }
     
-    public abstract Actor build() throws Exception;
-
 	public Actor build(Actor actor) throws Exception {
-		
 		actor.setName(actorName);
 		actor.setInputs(inputs);
 		actor.setOutputs(outputs);
@@ -96,4 +84,6 @@ public abstract class ActorBuilder {
 		
 		return actor;
 	}
+
+    public abstract Actor build() throws Exception;
 }
