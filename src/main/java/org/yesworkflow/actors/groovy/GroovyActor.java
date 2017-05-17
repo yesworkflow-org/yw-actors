@@ -34,11 +34,11 @@ public class GroovyActor extends ScriptActor {
 	}
 
 	@Override
-	public synchronized void configure() throws Exception {
+	public synchronized void initialize() throws Exception {
 		
-		super.configure();
+		super.initialize();
 	
-		if (configureScript != null) {
+		if (initializeScript != null) {
 
 			Binding binding = new Binding();
 	
@@ -46,16 +46,16 @@ public class GroovyActor extends ScriptActor {
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 	
-			runScript(configureScript, binding);
+			runScript(initializeScript, binding);
 		}	
 	}
 	
 	@Override
-	public synchronized void initialize() throws Exception {
+	public synchronized void start() throws Exception {
 	
-		super.initialize();
+		super.start();
 		
-		if (initializeScript != null) {
+		if (startScript != null) {
 			
 			Binding binding = new Binding();
 
@@ -65,7 +65,7 @@ public class GroovyActor extends ScriptActor {
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 
-			runScript(initializeScript, binding);
+			runScript(startScript, binding);
 		}
 	}
 	

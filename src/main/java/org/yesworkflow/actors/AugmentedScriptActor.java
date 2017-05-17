@@ -25,15 +25,15 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	public abstract DataSerializationFormat getOutputSerializationFormat();
 
 	@Override
-	public synchronized void configure() throws Exception {
+	public synchronized void initialize() throws Exception {
 		
-		if (configureScript != null && !configureScript.trim().isEmpty()) {
+		if (initializeScript != null && !initializeScript.trim().isEmpty()) {
 
-			// augment the configure script
-			String augmentedConfigureScript = getAugmentedConfigureScript();
+			// augment the initialize script
+			String augmentedInitializeScript = getAugmentedInitializeScript();
 			
-			// run the augmented configure script
-			String serializedOutput = _runAugmentedScript(augmentedConfigureScript);
+			// run the augmented initialize script
+			String serializedOutput = _runAugmentedScript(augmentedInitializeScript);
 			
 			// update the actor state based on the augmented script output
 			Map<String,Object> binding = _parseSerializedOutput(serializedOutput);
@@ -42,27 +42,27 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	}
 	
 	
-	protected String getAugmentedConfigureScript() throws IOException {
+	protected String getAugmentedInitializeScript() throws IOException {
 		
 		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
-		_appendScriptHeader(augmentedScriptBuilder, "configure");
-		_appendOriginalScript(augmentedScriptBuilder, configureScript);
+		_appendScriptHeader(augmentedScriptBuilder, "initialize");
+		_appendOriginalScript(augmentedScriptBuilder, initializeScript);
 		
 		return augmentedScriptBuilder.toString();
 	}
 	
 	
 	@Override
-	public synchronized void initialize() throws Exception {
+	public synchronized void start() throws Exception {
 		
-		if (initializeScript != null && !initializeScript.trim().isEmpty()) {
+		if (startScript != null && !startScript.trim().isEmpty()) {
 			
 			// augment the initialize script
-			String augmentedInitializeScript = _getAugmentedInitializeScript();
+			String augmentedStartScript = _getAugmentedStartScript();
 			
 			// run the augmented initialize script
-			String serializedOutput = _runAugmentedScript(augmentedInitializeScript);
+			String serializedOutput = _runAugmentedScript(augmentedStartScript);
 			
 			// update the actor state based on the augmented script output
 			Map<String,Object> scriptOutputs = _parseSerializedOutput(serializedOutput);
@@ -71,26 +71,26 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		}
 	}
 	
-	protected String _getAugmentedInitializeScript() throws Exception {
+	protected String _getAugmentedStartScript() throws Exception {
 		
-		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
+		ScriptAugmenter builder = getNewScriptAugmenter();
 		
-		_appendScriptHeader(augmentedScriptBuilder, "initialize");
-		_appendInputControlFunctions(augmentedScriptBuilder);
-		_appendOutputControlFunctions(augmentedScriptBuilder);
-		_appendActorSettingInitializers(augmentedScriptBuilder);
-		_appendActorStateVariableInitializers(augmentedScriptBuilder, true);
-		_appendActorInputVariableInitializers(augmentedScriptBuilder);
-		_appendOriginalScript(augmentedScriptBuilder, initializeScript);
-		_appendOriginalScriptOutputDelimiter(augmentedScriptBuilder);
-		appendSerializationBeginStatement(augmentedScriptBuilder);
-		_appendStateVariableSerializationStatements(augmentedScriptBuilder);
-		_appendInputControlVariableSerializationStatements(augmentedScriptBuilder);
-		_appendOutputControlVariableSerializationStatements(augmentedScriptBuilder);
-		appendSerializationEndStatement(augmentedScriptBuilder);
-		_appendScriptSuffix(augmentedScriptBuilder);
+		_appendScriptHeader(builder, "start");
+		_appendInputControlFunctions(builder);
+		_appendOutputControlFunctions(builder);
+		_appendActorSettingInitializers(builder);
+		_appendActorStateVariableInitializers(builder, true);
+		_appendActorInputVariableInitializers(builder);
+		_appendOriginalScript(builder, startScript);
+		_appendOriginalScriptOutputDelimiter(builder);
+		appendSerializationBeginStatement(builder);
+		_appendStateVariableSerializationStatements(builder);
+		_appendInputControlVariableSerializationStatements(builder);
+		_appendOutputControlVariableSerializationStatements(builder);
+		appendSerializationEndStatement(builder);
+		_appendScriptSuffix(builder);
 		
-		return augmentedScriptBuilder.toString();
+		return builder.toString();
 	}
 	
 	@Override

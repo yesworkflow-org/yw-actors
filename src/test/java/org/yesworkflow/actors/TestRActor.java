@@ -41,10 +41,10 @@ public class TestRActor extends TestCase {
 								 .name("Hello")
 								 .build();
 
-		actor.configure();
-		actor.initialize();
-				
-		assertEquals(
+        actor.initialize();
+        actor.start();
+
+        assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
 			""																							+ EOL +
 			"# load required libraries"																	+ EOL +
@@ -80,10 +80,10 @@ public class TestRActor extends TestCase {
     						.input("greeting")
     						.build();
 
-		actor.configure();
-		actor.initialize();
-		
-		actor.setInputValue("greeting", "Goodbye");
+        actor.initialize();
+        actor.start();
+
+        actor.setInputValue("greeting", "Goodbye");
 		
 		assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
@@ -135,10 +135,10 @@ public class TestRActor extends TestCase {
                             .output("greeting")
                             .build();
 
-	    actor.configure();
-		actor.initialize();
-		
-		assertEquals(
+        actor.initialize();
+        actor.start();
+
+        assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
 			"" 																							+ EOL +
 			"# load required libraries"																	+ EOL +
@@ -188,8 +188,8 @@ public class TestRActor extends TestCase {
 							.state("greeting")
 							.build();
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		
 		assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
@@ -238,8 +238,8 @@ public class TestRActor extends TestCase {
 						    .type("z", "Integer")
 						    .build();
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		
 		actor.setInputValue("x", 3);
 		actor.setInputValue("y", 12);

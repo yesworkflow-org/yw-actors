@@ -40,8 +40,8 @@ public class TestPythonActor extends TestCase {
                                           .name("Hello")
 										  .build();
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 				
 		assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
@@ -81,9 +81,9 @@ public class TestPythonActor extends TestCase {
 							.input("greeting")
 							.build();
 
-		actor.configure();
-		actor.initialize();
-		
+        actor.initialize();
+        actor.start();
+
 		actor.setInputValue("greeting", "Goodbye");
 		
 		assertEquals(
@@ -138,9 +138,9 @@ public class TestPythonActor extends TestCase {
 							.output("greeting")
 							.build();
 
-		actor.configure();
-		actor.initialize();
-		
+        actor.initialize();
+        actor.start();
+	
 		assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
 			"" 																							+ EOL +
@@ -193,9 +193,9 @@ public class TestPythonActor extends TestCase {
 							.state("greeting")
 							.build();
 
-		actor.configure();
-		actor.initialize();
-		
+        actor.initialize();
+        actor.start();
+	
 		assertEquals(
 			"# AUGMENTED STEP SCRIPT FOR ACTOR Hello" 													+ EOL +
 			"" 																							+ EOL +
@@ -246,9 +246,9 @@ public class TestPythonActor extends TestCase {
 								.type("z", "Integer")
 								.build();
 
-		actor.configure();
-		actor.initialize();
-		
+        actor.initialize();
+        actor.start();
+
 		actor.setInputValue("x", 3);
 		actor.setInputValue("y", 12);
 		

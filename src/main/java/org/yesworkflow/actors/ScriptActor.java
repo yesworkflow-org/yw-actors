@@ -5,12 +5,12 @@ import java.util.Map;
 
 public abstract class ScriptActor extends Actor {
 	
-    protected String configureScript;
     protected String initializeScript;
     protected String startScript;
     protected String stepScript;
     protected String wrapupScript;
     protected String disposeScript;
+
     protected String scriptExtension;
     protected OutputStreamMode stdoutMode;
     protected OutputStreamMode stderrMode;
@@ -24,11 +24,11 @@ public abstract class ScriptActor extends Actor {
 	}
 	
     public synchronized void setStart(String startScript) { this.startScript = startScript; }
+    public synchronized void setInitialize(String initializeScript) { this.initializeScript = initializeScript; }
     public synchronized void setStep(String stepScript) { this.stepScript = stepScript; }
 	public synchronized void setWrapup(String wrapupScript) { this.wrapupScript = wrapupScript; }
 	public synchronized void setDispose(String disposeScript) { this.disposeScript = disposeScript; }
-	public synchronized void setInitialize(String initializeScript) { this.initializeScript = initializeScript; }
-	public synchronized void setConfigure(String configureScript) { this.configureScript = configureScript; }
+
 	public synchronized void setStdoutMode(String mode) throws Exception { this.stdoutMode = parseOutputMode(mode); }
 	public synchronized void setStderrMode(String mode) throws Exception { this.stderrMode = parseOutputMode(mode); }
 
@@ -40,7 +40,7 @@ public abstract class ScriptActor extends Actor {
 		} else if (mode.equals("immediate")) {
 			return OutputStreamMode.IMMEDIATE;	
 		} else {
-			throw new Exception("Parse mode string must be one of discard, delayed, or immedate.");
+			throw new Exception("Parse mode string must be one of discard, delayed, or immediate.");
 		}
 	}
 		

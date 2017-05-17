@@ -46,8 +46,8 @@ public class TestGroovyActor extends TestCase {
 			"out = a;"							+ EOL
 		);
 
-		actor.configure();
 		actor.initialize();
+		actor.start();
 		actor.step();
 		
 		assertEquals(actor.getOutputValue("out"),"the default value");
@@ -67,8 +67,8 @@ public class TestGroovyActor extends TestCase {
 			"out = a;"				+ EOL
 		);
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		actor.setInputValue("a", 3);
 		actor.step();
 		
@@ -88,8 +88,8 @@ public class TestGroovyActor extends TestCase {
 			"c = 3"
 		);
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		String message = null;
 		try {
 			actor.step();
@@ -115,8 +115,8 @@ public class TestGroovyActor extends TestCase {
 			"c = 3"
 		);
 				
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		actor.step();
 		
 		assertEquals(1, actor.getOutputValue("a"));
@@ -139,8 +139,8 @@ public class TestGroovyActor extends TestCase {
 			"c = 3;" 								+ EOL
 		);
 
-		actor.configure();
-		actor.initialize();
+        actor.initialize();
+        actor.start();
 		actor.step();
 		
 		assertEquals(1, actor.getOutputValue("a"));

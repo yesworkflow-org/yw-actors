@@ -264,11 +264,11 @@ public abstract class Actor {
 	////               public actor lifecycle methods                      ////
 	
 			
-	public void configure()throws Exception {
+	public void initialize()throws Exception {
 		runCount = 0;
 	}
 	
-	public void initialize() throws Exception {
+	public void start() throws Exception {
 		
 		for (Map.Entry<String, Object> entry : defaultInputValues.entrySet()) {
 			
@@ -366,7 +366,7 @@ public abstract class Actor {
 			actorStatus.setStepDirectory(getCurrentStepDirectory());	
 		}	
 	}
-	
+
 	public synchronized void step() throws Exception {
 		abstractActorStep();
 	}
