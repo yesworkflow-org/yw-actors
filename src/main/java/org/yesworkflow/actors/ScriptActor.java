@@ -54,9 +54,9 @@ public abstract class ScriptActor extends Actor {
 	protected synchronized void updateOutputVariables(Map<String,Object> variables) throws Exception {
 		for (String label : outputSignature.keySet()) {
 			if (actorStatus.getOutputEnable(label)) {
-				if (!variables.containsKey(label)) {
-					throw new Exception("Actor " + name + " did not output a value for " + label);
-				}	
+//				if (!variables.containsKey(label)) {
+//					throw new Exception("Actor " + name + " did not output a value for " + label);
+//				}	
 				Object value = variables.get(label);				
 				if (value instanceof File && ! ((File)value).exists()) {
 					value = null;	
@@ -68,9 +68,9 @@ public abstract class ScriptActor extends Actor {
 	
 	@Override
 	protected synchronized void storeOutputValue(String label, Object value) throws Exception {	
-		if (value == null && !outputSignature.get(label).isNullable()) {
-			throw new Exception("Null data output by actor " + label);
-		}
+//		if (value == null && !outputSignature.get(label).isNullable()) {
+//			throw new Exception("Null data output by actor " + label);
+//		}
 		outputValues.put(label, value);
 	}
 }

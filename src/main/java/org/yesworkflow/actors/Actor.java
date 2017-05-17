@@ -438,9 +438,9 @@ public abstract class Actor {
 
 	protected synchronized void storeOutputValue(String label, Object value) throws Exception {	
 
-		if (value == null && !outputSignature.get(label).isNullable()) {
-			throw new Exception(label);
-		}
+//		if (value == null && !outputSignature.get(label).isNullable()) {
+//			throw new Exception(label);
+//		}
 		
 		outputValues.put(label, value);
 	}

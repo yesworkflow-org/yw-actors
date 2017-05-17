@@ -157,7 +157,6 @@ public class RScriptAugmenter extends ScriptAugmenter {
 			return this;
 		}
 
-
 		public RScriptAugmenter appendInputControlFunctions() {
 
 			appendComment("define functions for enabling and disabling actor inputs");
