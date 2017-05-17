@@ -27,7 +27,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	@Override
 	public synchronized void configure() throws Exception {
 		
-		if (_configureScript != null && !_configureScript.trim().isEmpty()) {
+		if (configureScript != null && !configureScript.trim().isEmpty()) {
 
 			// augment the configure script
 			String augmentedConfigureScript = getAugmentedConfigureScript();
@@ -37,7 +37,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			
 			// update the actor state based on the augmented script output
 			Map<String,Object> binding = _parseSerializedOutput(serializedOutput);
-			_updateStateVariables(binding);
+			updateStateVariables(binding);
 		}
 	}
 	
@@ -47,7 +47,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		ScriptAugmenter augmentedScriptBuilder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(augmentedScriptBuilder, "configure");
-		_appendOriginalScript(augmentedScriptBuilder, _configureScript);
+		_appendOriginalScript(augmentedScriptBuilder, configureScript);
 		
 		return augmentedScriptBuilder.toString();
 	}
@@ -56,7 +56,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	@Override
 	public synchronized void initialize() throws Exception {
 		
-		if (_initializeScript != null && !_initializeScript.trim().isEmpty()) {
+		if (initializeScript != null && !initializeScript.trim().isEmpty()) {
 			
 			// augment the initialize script
 			String augmentedInitializeScript = _getAugmentedInitializeScript();
@@ -67,7 +67,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			// update the actor state based on the augmented script output
 			Map<String,Object> scriptOutputs = _parseSerializedOutput(serializedOutput);
 			_updateInputOutputControlVariables(scriptOutputs);
-			_updateStateVariables(scriptOutputs);
+			updateStateVariables(scriptOutputs);
 		}
 	}
 	
@@ -81,7 +81,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		_appendActorSettingInitializers(augmentedScriptBuilder);
 		_appendActorStateVariableInitializers(augmentedScriptBuilder, true);
 		_appendActorInputVariableInitializers(augmentedScriptBuilder);
-		_appendOriginalScript(augmentedScriptBuilder, _initializeScript);
+		_appendOriginalScript(augmentedScriptBuilder, initializeScript);
 		_appendOriginalScriptOutputDelimiter(augmentedScriptBuilder);
 		appendSerializationBeginStatement(augmentedScriptBuilder);
 		_appendStateVariableSerializationStatements(augmentedScriptBuilder);
@@ -96,7 +96,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	@Override
 	public synchronized void step() throws Exception {
 	
-		if (_stepScript != null && !_stepScript.trim().isEmpty()) {
+		if (stepScript != null && !stepScript.trim().isEmpty()) {
 
 			// augment the step script
 			String augmentedStepScript = getAugmentedStepScript();
@@ -113,8 +113,8 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			// update the actor state based on the augmented script output
 			Map<String,Object> scriptOutputs = _parseSerializedOutput(serializedOutput);
 			_updateInputOutputControlVariables(scriptOutputs);
-			_updateOutputVariables(scriptOutputs);			
-			_updateStateVariables(scriptOutputs);
+			updateOutputVariables(scriptOutputs);			
+			updateStateVariables(scriptOutputs);
 		}
 	}
 	
@@ -129,7 +129,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		_appendActorStateVariableInitializers(augmentedScriptBuilder, true);
 		_appendActorInputVariableInitializers(augmentedScriptBuilder);
 		_appendStepDirectoryEntryCommand(augmentedScriptBuilder);
-		_appendOriginalScript(augmentedScriptBuilder, _stepScript);
+		_appendOriginalScript(augmentedScriptBuilder, stepScript);
 		_appendOriginalScriptOutputDelimiter(augmentedScriptBuilder);
 		appendSerializationBeginStatement(augmentedScriptBuilder);
 		_appendOutputVariableSerializationStatements(augmentedScriptBuilder);
@@ -145,7 +145,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	@Override
 	public synchronized void wrapup() throws Exception {
 		
-		if (_wrapupScript != null && !_wrapupScript.trim().isEmpty()) {
+		if (wrapupScript != null && !wrapupScript.trim().isEmpty()) {
 			
 			// augment the wrapup script
 			String augmentedWrapupScript = _getAugmentedWrapupScript();
@@ -162,7 +162,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		_appendScriptHeader(augmentedScriptBuilder, "wrapup");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
 		_appendActorStateVariableInitializers(augmentedScriptBuilder, false);
-		_appendOriginalScript(augmentedScriptBuilder, _wrapupScript);
+		_appendOriginalScript(augmentedScriptBuilder, wrapupScript);
 		_appendScriptSuffix(augmentedScriptBuilder);
 		
 		return augmentedScriptBuilder.toString();
@@ -171,7 +171,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 	@Override
 	public synchronized void dispose() throws Exception {
 		
-		if (_disposeScript != null && !_disposeScript.trim().isEmpty()) {
+		if (disposeScript != null && !disposeScript.trim().isEmpty()) {
 			
 			// augment the dispose script
 			String augmentedDisposeScript = _getAugmentedDisposeScript();
@@ -188,7 +188,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		_appendScriptHeader(augmentedScriptBuilder, "dispose");
 		_appendActorSettingInitializers(augmentedScriptBuilder);
 		_appendActorStateVariableInitializers(augmentedScriptBuilder, false);
-		_appendOriginalScript(augmentedScriptBuilder, _disposeScript);
+		_appendOriginalScript(augmentedScriptBuilder, disposeScript);
 		_appendScriptSuffix(augmentedScriptBuilder);
 
 		return augmentedScriptBuilder.toString();
@@ -357,7 +357,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		
 		String adjustedStderr = adjustStderr(completeStderr);
 		
-		if (!adjustedStderr.isEmpty() && _stderrMode == OutputStreamMode.IMMEDIATE) {
+		if (!adjustedStderr.isEmpty() && stderrMode == OutputStreamMode.IMMEDIATE) {
 			System.err.println(	">>>>>>>>>>>>>>>>>>>> Error running augmented actor script >>>>>>>>>>>>>>>>>>>>>>"	);
 			System.err.print  (	augmentedScript																		);
 			System.err.println(	"-------------------------------- Error message ---------------------------------"	);
@@ -380,11 +380,11 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			serializedOutputs = completeStdout.substring(serializedOutputStart);
 		}
 		
-		if (_stderrMode == OutputStreamMode.DELAYED) {
+		if (stderrMode == OutputStreamMode.DELAYED) {
 			errStream.print(adjustedStderr);
 		}
 
-		if (_stdoutMode == OutputStreamMode.DELAYED) {
+		if (stdoutMode == OutputStreamMode.DELAYED) {
 			outStream.print(scriptStdout);
 		}
 

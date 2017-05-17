@@ -13,40 +13,40 @@ import groovy.lang.Script;
 
 public class GroovyActor extends ScriptActor {
 
-    private String _wrapperScript;
-    private Map<String,Script> _compiledScripts;    
+    private String wrapperScript;
+    private Map<String,Script> compiledScripts;    
     
 	public GroovyActor() {
 		super();
-		
 		synchronized(this) {
-			_compiledScripts = new HashMap<String, Script>();
+			compiledScripts = new HashMap<String, Script>();
 		}
 	}
 
 	public synchronized Object clone() throws CloneNotSupportedException {
 		GroovyActor theClone = (GroovyActor) super.clone();
-		theClone._compiledScripts = new HashMap<String, Script>();
+		theClone.compiledScripts = new HashMap<String, Script>();
 		return theClone;
 	}
 		
 	public synchronized void setWrapperScript(String script) {
-		_wrapperScript = script;
+		wrapperScript = script;
 	}
 
+	@Override
 	public synchronized void configure() throws Exception {
 		
 		super.configure();
 	
-		if (_configureScript != null) {
+		if (configureScript != null) {
 
 			Binding binding = new Binding();
 	
-			_bindConstants(binding);
+			bindConstants(binding);
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 	
-			runScript(_configureScript, binding);
+			runScript(configureScript, binding);
 		}	
 	}
 	
@@ -55,17 +55,17 @@ public class GroovyActor extends ScriptActor {
 	
 		super.initialize();
 		
-		if (_initializeScript != null) {
+		if (initializeScript != null) {
 			
 			Binding binding = new Binding();
 
-			_bindConstants(binding);
-			_bindStateVariables(binding);
-			_bindInputs(binding);
+			bindConstants(binding);
+			bindStateVariables(binding);
+			bindInputs(binding);
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 
-			runScript(_initializeScript, binding);
+			runScript(initializeScript, binding);
 		}
 	}
 	
@@ -75,24 +75,24 @@ public class GroovyActor extends ScriptActor {
 		
 		super.step();
 
-		if (_stepScript != null) {
+		if (stepScript != null) {
 			
 			Binding binding = new Binding();
 
-			_bindConstants(binding);
-			_bindStateVariables(binding);
-			_bindInputs(binding);
+			bindConstants(binding);
+			bindStateVariables(binding);
+			bindInputs(binding);
 			binding.setVariable("_outputs", outputSignature.keySet());
 			bindSpecial(binding);
 			bindDirectories(binding);
 
 			try {
-				runScript(_stepScript, binding);
+				runScript(stepScript, binding);
 			} catch (Exception e) {
 				throw e;
 			}
 			
-			_updateOutputVariables((Map<String,Object>)binding.getVariables());			
+			updateOutputVariables((Map<String,Object>)binding.getVariables());			
 		}
 	}
 
@@ -102,17 +102,17 @@ public class GroovyActor extends ScriptActor {
 		
 		super.wrapup();
 		
-		if (_wrapupScript != null) {
+		if (wrapupScript != null) {
 			
 			Binding binding = new Binding();
 			
-			_bindConstants(binding);
-			_bindStateVariables(binding);
-			_bindInputs(binding);
+			bindConstants(binding);
+			bindStateVariables(binding);
+			bindInputs(binding);
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 	
-			runScript(_wrapupScript, binding);
+			runScript(wrapupScript, binding);
 		}
 	}
 
@@ -121,71 +121,50 @@ public class GroovyActor extends ScriptActor {
 		
 		super.dispose();
 		
-		if (_disposeScript != null) {
+		if (disposeScript != null) {
 			
 			Binding binding = new Binding();
 	
-			_bindConstants(binding);			
-			_bindStateVariables(binding);
-			_bindInputs(binding);
+			bindConstants(binding);			
+			bindStateVariables(binding);
+			bindInputs(binding);
 			binding.setVariable("_outputs", new ArrayList<String>());
 			bindSpecial(binding);
 	
-			runScript(_disposeScript, binding);
+			runScript(disposeScript, binding);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	protected synchronized void runScript(String script, Binding binding) throws Exception {
-		
 		runTheScript(script, binding);
-		
 		actorStatus = (ActorStatus)binding.getVariable("_status");
-		
-		_updateStateVariables((Map<String,Object>)binding.getVariables());
+		updateStateVariables((Map<String,Object>)binding.getVariables());
 	}
 
 	protected synchronized void runTheScript(String script, Binding binding) throws Exception {
-		
 		Script groovyScript;
-		
-		if (_wrapperScript == null ) {
-			groovyScript = _getCompiledGroovyScript(script);
+		if (wrapperScript == null ) {
+			groovyScript = compileGroovyScript(script);
 		} else {
-			groovyScript = _getCompiledGroovyScript(_wrapperScript);
+			groovyScript = compileGroovyScript(wrapperScript);
 		}
-		
 		binding.setVariable("_script", script);
-		
-		_executeGroovyScript(groovyScript, binding);	
+	    groovyScript.setBinding(binding);
+	    groovyScript.run();
 	}
 	
-	private synchronized void _executeGroovyScript(Script script, Binding binding) throws Exception {
-		
-		script.setBinding(binding);
-		
-		try {
-			script.run();
-		} catch (Exception e) {
-			throw e;
-		}		
-	}
-	
-	private synchronized Script _getCompiledGroovyScript(String script) {
-		
-		Script compiledScript = _compiledScripts.get(script);
-		
+	private synchronized Script compileGroovyScript(String script) {
+		Script compiledScript = compiledScripts.get(script);
 		if (compiledScript == null) {
 			String prefixedScript =  script;
 			compiledScript =  new GroovyShell().parse(prefixedScript);
-			_compiledScripts.put(script, compiledScript);
+			compiledScripts.put(script, compiledScript);
 		}
-		
 		return compiledScript;
 	}
 	
 	private synchronized void bindSpecial(Binding binding) {
-		
 		binding.setVariable("_inputs", inputValues);
 		binding.setVariable("_states", stateVariables);
 		binding.setVariable("_status" , actorStatus);
@@ -195,31 +174,28 @@ public class GroovyActor extends ScriptActor {
 	}
 	
 	private synchronized void bindDirectories(Binding binding) throws Exception {
-		
 		if (runDirectoryPath != null) {
-
 			binding.setVariable("_runDir", runDirectoryPath);
-			
 			Map<String,String> outflowDirectoryMap = new HashMap<String,String>();
 			binding.setVariable("_outflowDirectory", outflowDirectoryMap);
 		}		
 	}
 
-	private synchronized void _bindConstants(Binding binding) {
+	private synchronized void bindConstants(Binding binding) {
 		for (String name: constants.keySet()) {
 			Object value = constants.get(name);
 			binding.setVariable(name,value);
 		}
 	}
 
-	private synchronized void _bindStateVariables(Binding binding) {
+	private synchronized void bindStateVariables(Binding binding) {
 		for (String name: stateVariables.keySet()) {
 			Object value = stateVariables.get(name);
 			binding.setVariable(name, value);
 		}
 	}	
 	
-	private synchronized void _bindInputs(Binding binding) {
+	private synchronized void bindInputs(Binding binding) {
 		for (String name: inputSignature.keySet()) {
 			binding.setVariable( name, inputValues.get(name) );
 		}

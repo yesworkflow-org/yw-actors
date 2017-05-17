@@ -7,35 +7,17 @@ package org.yesworkflow.actors;
  */
 public class InputSignatureElement extends SignatureElement {
 
-	private volatile Object _defaultValue = null;
-	private volatile boolean _defaultInputEnable = true;
-	private volatile String _localPath = "";
+	private volatile Object  defaultValue = null;
+	private volatile boolean defaultInEnable = true;
+	private volatile String  localPath = "";
 
-	public InputSignatureElement(String label) {
-		super(label);
-	}
+	public InputSignatureElement(String label) { super(label); }
 
-	public void setDefaultValue(Object value) {
-		_defaultValue = value;
-	}
+	public void setDefaultInEnable(boolean defaultInEnable) { this.defaultInEnable = defaultInEnable; }
+    public void setDefaultValue(Object value)               { this.defaultValue = value; }
+	public void setLocalPath(String localPath)              { this.localPath = localPath; }
 
-	public Object getDefaultValue() { 
-		return _defaultValue; 
-	}
-
-	public void setDefaultInputEnable(boolean defaultInputEnable) {
-		_defaultInputEnable = defaultInputEnable;
-	}
-
-	public boolean getDefaultInputEnable() { 
-		return _defaultInputEnable; 
-	}
-
-	public void setLocalPath(String localPath) {
-		_localPath = localPath;
-	}
-
-	public String getLocalPath() {
-		return _localPath;
-	}
+	public boolean getDefaultInEnable() { return defaultInEnable; }
+    public Object getDefaultValue()     { return defaultValue; }
+	public String getLocalPath()        { return localPath; }
 }

@@ -7,33 +7,22 @@ import com.google.gson.Gson;
 public class RScriptAugmenter extends ScriptAugmenter {
 
 		public ScriptAugmenter appendCode(String code) {
-			
-			_script.append(		code	)
-				   .append(		EOL		);
-			
+			scriptBuilder.append(code).append(EOL);
 			return this;
 		}
 
 		public RScriptAugmenter appendSeparator() {
-			
-			_script.append(		"######################################################################################"	)
-				   .append(		EOL																							);
-			
+			scriptBuilder.append("######################################################################################").append(EOL);
 			return this;
 		}
 
 		public RScriptAugmenter appendComment(String text) {
-			
-			_script.append(		"# "	)
-				   .append(		text	)
-			   	   .append(		EOL		);
-			
+			scriptBuilder.append("# ").append(text).append(EOL);
 			return this;
 		}
 
 		public ScriptAugmenter appendLiteralAssignment(String name, Object value, String type, boolean mutable, boolean nullable) throws Exception {
-
-		if (value == null) {
+		    if (value == null) {
 				_assignNullLiteral(name);
 			} else if (type == null) {
 				_assignStringLiteral(name, value);
@@ -50,13 +39,12 @@ public class RScriptAugmenter extends ScriptAugmenter {
 			} else {
 				_assignOtherLiteral(name, value);
 			}
-		
 			return this;
 		}
 		
 		private RScriptAugmenter _assignStringLiteral(String name, Object value) {
 			
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	" <- "	)
 				   .append( 	"'"		)
 				   .append( 	value	)
@@ -71,7 +59,7 @@ public class RScriptAugmenter extends ScriptAugmenter {
 			Gson gson = new Gson();
 			String json = gson.toJson(value);
 			
-			_script.append(		name				)
+			scriptBuilder.append(		name				)
 				   .append( 	" <- fromJSON('"	)
 				   .append( 	json				)
 				   .append( 	"')"				)
@@ -92,7 +80,7 @@ public class RScriptAugmenter extends ScriptAugmenter {
 				throw new Exception("Error assigning value to R " + type + " variable '" + name + "': " + value);
 			}
 			
-			_script.append(		name					)
+			scriptBuilder.append(		name					)
 				   .append( 	" <- "					)
 				   .append( 	b ? "TRUE" : "FALSE"	)
 				   .append(		EOL						);
@@ -104,7 +92,7 @@ public class RScriptAugmenter extends ScriptAugmenter {
 			if (! (value instanceof Number)) {
 				throw new Exception("Error assigning value to R " + type + " variable '" + name + "': " + value);
 			}
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	" <- "	)
 				   .append( 	value	)
 				   .append(		EOL		);
@@ -112,7 +100,7 @@ public class RScriptAugmenter extends ScriptAugmenter {
 		}
 
 		private RScriptAugmenter _assignOtherLiteral(String name, Object value) {
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	" <- "	)
 				   .append( 	value	)
 				   .append(		EOL		);
@@ -120,14 +108,14 @@ public class RScriptAugmenter extends ScriptAugmenter {
 		}
 
 		private RScriptAugmenter _assignNullLiteral(String name) {
-			_script.append(		name		)
+			scriptBuilder.append(		name		)
 				   .append( 	" <- NULL"	)
 				   .append(		EOL			);
 			return this;
 		}
 		
 		public RScriptAugmenter appendChangeDirectory(String path) {
-			_script.append(		"setwd('"		)
+			scriptBuilder.append(		"setwd('"		)
 				   .append( 	path			)
 				   .append(		"')"			)
 				   .append(		EOL				);
@@ -135,7 +123,7 @@ public class RScriptAugmenter extends ScriptAugmenter {
 		}
 
 		public RScriptAugmenter appendPrintStringStatement(String string) {
-			_script.append(		"cat('"		)
+			scriptBuilder.append(		"cat('"		)
 				   .append( 	string		)
 				   .append(		"\\n')"		)
 				   .append(		EOL			);
@@ -148,13 +136,13 @@ public class RScriptAugmenter extends ScriptAugmenter {
 		}
 
 		public RScriptAugmenter appendSerializationEndStatement() {
-			_script.append( 	"cat(toJSON(outputList));"	);
+			scriptBuilder.append( 	"cat(toJSON(outputList));"	);
 			return this;
 		}
 		
 		public RScriptAugmenter appendVariableSerializationStatement(String name, String type) {
 			
-			_script.append(		"outputList <- c(outputList, list(")
+			scriptBuilder.append(		"outputList <- c(outputList, list(")
 			   .append(		name		)
 			   .append(		"="			)
 			   .append(		name		)

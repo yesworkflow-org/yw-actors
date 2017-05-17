@@ -6,21 +6,12 @@ public abstract class ScriptAugmenter {
     
     protected final static String EOL = System.getProperty("line.separator");
 
-    protected StringBuilder _script = new StringBuilder();
+    protected StringBuilder scriptBuilder = new StringBuilder();
         
-    public ScriptAugmenter append(String text) {
-        _script.append(text);
-        return this;
-    }
+    public ScriptAugmenter append(String text) { scriptBuilder.append(text); return this; }
+    public ScriptAugmenter appendBlankLine() { scriptBuilder.append(EOL); return this;}
 
-    public ScriptAugmenter appendBlankLine() {
-        _script.append(EOL);
-        return this;
-    }
-
-    public String toString() {
-        return _script.toString();
-    }
+    public String toString() { return scriptBuilder.toString(); }
 
     public abstract ScriptAugmenter appendChangeDirectory(String string);
     public abstract ScriptAugmenter appendCode(String originalScript);

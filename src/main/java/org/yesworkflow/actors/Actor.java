@@ -10,10 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * This class is the default base class for all implementations of the Actor
- * interface. 
- */
 public abstract class Actor {    
     
 	///////////////////////////////////////////////////////////////////////////
@@ -51,9 +47,6 @@ public abstract class Actor {
 	///////////////////////////////////////////////////////////////////////////
 	////              public constructors and clone methods                ////
 	
-	/**
-	 * Creates and initializes the fields of a new instance.
-	 */
 	public Actor() {
 
 		synchronized(this) {
@@ -67,7 +60,7 @@ public abstract class Actor {
 			stepOfScratchDirectory   = 0;
 			usesStepDirectory 		 = false;
 			inStream 				 = System.in;
-		    outStream 				 =System.out;
+		    outStream 				 = System.out;
 		    errStream 				 = System.err;
 		    
 			// initialize collection instance fields
@@ -358,14 +351,14 @@ public abstract class Actor {
 		}
 	}
 	
-	protected synchronized void _abstractActorStep() throws Exception {
+	protected synchronized void abstractActorStep() throws Exception {
 
 		runCount++;
 
 		resetInputEnables();
 		
 		for (String label: outputSignature.keySet()) {
-			boolean defaultOutputEnable = outputSignature.get(label).getDefaultOutputEnable();
+			boolean defaultOutputEnable = outputSignature.get(label).getDefaultOutEnable();
 			actorStatus.setOutputEnable(label, defaultOutputEnable);
 		}
 
@@ -375,7 +368,7 @@ public abstract class Actor {
 	}
 	
 	public synchronized void step() throws Exception {
-		_abstractActorStep();
+		abstractActorStep();
 	}
 
 
@@ -386,7 +379,7 @@ public abstract class Actor {
 	public synchronized void resetInputEnables() {
 
 		for (String label: inputSignature.keySet()) {
-			boolean defaultInputEnable = inputSignature.get(label).getDefaultInputEnable();
+			boolean defaultInputEnable = inputSignature.get(label).getDefaultInEnable();
 			actorStatus.setReadyForInput(label, defaultInputEnable);
 		}
 	}
@@ -443,7 +436,7 @@ public abstract class Actor {
 	///////////////////////////////////////////////////////////////////////////
 	////             protected actor lifecycle methods                     ////
 
-	protected synchronized void _storeOutputValue(String label, Object value) throws Exception {	
+	protected synchronized void storeOutputValue(String label, Object value) throws Exception {	
 
 		if (value == null && !outputSignature.get(label).isNullable()) {
 			throw new Exception(label);
@@ -513,7 +506,7 @@ public abstract class Actor {
 			
 			Boolean defaultReadiness = (Boolean) inputProperties.get("defaultReadiness");
 			if (defaultReadiness != null) {
-				inputElement.setDefaultInputEnable(defaultReadiness);
+				inputElement.setDefaultInEnable(defaultReadiness);
 			}
 		}
 

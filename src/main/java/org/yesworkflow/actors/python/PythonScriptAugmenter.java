@@ -9,19 +9,19 @@ import com.google.gson.Gson;
 public class PythonScriptAugmenter extends ScriptAugmenter {
 
 		public ScriptAugmenter appendCode(String code) {
-			_script.append(		code	)
+			scriptBuilder.append(		code	)
 				   .append(		EOL		);
 			return this;
 		}
 
 		public PythonScriptAugmenter appendSeparator() {
-			_script.append(		"######################################################################################"	)
+			scriptBuilder.append(		"######################################################################################"	)
 				   .append(		EOL																							);
 			return this;
 		}
 		
 		public PythonScriptAugmenter appendComment(String text) {
-			_script.append(		"# "	)
+			scriptBuilder.append(		"# "	)
 				   .append(		text	)
 			   	   .append(		EOL		);
 			return this;
@@ -54,7 +54,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 			Gson gson = new Gson();
 			String json = gson.toJson(value);
 			
-			_script.append(		name						)
+			scriptBuilder.append(		name						)
 				   .append( 	" = json.load(StringIO('"	)
 				   .append( 	json						)
 				   .append(		"'))"						)
@@ -64,7 +64,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		}
 		
 		private PythonScriptAugmenter _assignStringLiteral(String name, Object value) {
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	"="		)
 				   .append( 	"'"		)
 				   .append( 	value	)
@@ -83,7 +83,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 			} else {
 				throw new Exception("Error assigning value to python " + type + " variable '" + name + "': " + value);
 			}
-			_script.append(		name		)
+			scriptBuilder.append(		name		)
 				   .append( 	"="			)
 				   .append( 	b ? 1 : 0	)
 				   .append(		EOL			);
@@ -94,7 +94,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 			if (! (value instanceof Number)) {
 				throw new Exception("Error assigning value to python " + type + " variable '" + name + "': " + value);
 			}
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	"="		)
 				   .append( 	value	)
 				   .append(		EOL		);
@@ -102,7 +102,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		}
 
 		private PythonScriptAugmenter _assignOtherLiteral(String name, Object value) {
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	"="		)
 				   .append( 	value	)
 				   .append(		EOL		);
@@ -110,14 +110,14 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		}
 
 		private PythonScriptAugmenter _assignNullLiteral(String name) {
-			_script.append(		name	)
+			scriptBuilder.append(		name	)
 				   .append( 	"=None"		)
 				   .append(		EOL		);
 			return this;
 		}
 		
 		public PythonScriptAugmenter appendChangeDirectory(String path) {
-			_script.append(		"os.chdir('"	)
+			scriptBuilder.append(		"os.chdir('"	)
 				   .append( 	path			)
 				   .append(		"')"			)
 				   .append(		EOL				);
@@ -125,7 +125,7 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		}
 
 		public PythonScriptAugmenter appendPrintStringStatement(String string) {
-			_script.append(		"print('"	)
+			scriptBuilder.append(		"print('"	)
 				   .append( 	string		)
 				   .append(		"')"		)
 				   .append(		EOL			);
@@ -133,12 +133,12 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		}
 
 		public PythonScriptAugmenter appendSerializationBeginStatement() {
-			_script.append( 	"_outputMap = dict()" 			+ EOL );
+			scriptBuilder.append( 	"_outputMap = dict()" 			+ EOL );
 			return this;
 		}
 		
 		public PythonScriptAugmenter appendSerializationEndStatement() {
-			_script.append( 	"if (len(_outputMap) > 0) : " 		+
+			scriptBuilder.append( 	"if (len(_outputMap) > 0) : " 		+
 								"  print(json.dumps(_outputMap))" 	+ EOL );
 			return this;
 		}
@@ -150,20 +150,20 @@ public class PythonScriptAugmenter extends ScriptAugmenter {
 		
 		public PythonScriptAugmenter appendVariableSerializationStatement(String name, String type) {
 			
-			_script.append(			"_outputMap['"			)
+			scriptBuilder.append(			"_outputMap['"			)
 				   .append(			name					)
 				   .append(			"'] = "					);
 			
 			if (type != null && type.equals("File")) {
 				
-				_script.append(		name + ".__str__()"		);
+				scriptBuilder.append(		name + ".__str__()"		);
 			
 			} else {
-				_script.append(		name					);
+				scriptBuilder.append(		name					);
 			
 			}
 			
-			_script.append(			EOL						);
+			scriptBuilder.append(			EOL						);
 			
 			return this;
 		}
