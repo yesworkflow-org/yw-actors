@@ -152,7 +152,10 @@ public class TestRActor extends TestCase {
 			"enabledOutputs  <- ''" 																	+ EOL +
 			"disabledOutputs <- ''" 																	+ EOL +
 			"" 																							+ EOL +
-			"# BEGINNING OF ORIGINAL SCRIPT" 															+ EOL +
+			"# initialize actor outputs to null"                                                        + EOL +
+            "greeting <- NULL"                                                                          + EOL +
+            ""                                                                                          + EOL +
+            "# BEGINNING OF ORIGINAL SCRIPT" 															+ EOL +
 			"" 																							+ EOL +
 			"greeting<-'Nice to meet you.'" 															+ EOL +
 			"" 																							+ EOL +
@@ -266,7 +269,10 @@ public class TestRActor extends TestCase {
 			"enabledOutputs  <- ''"																		+ EOL +
 			"disabledOutputs <- ''"																		+ EOL +
 			""																							+ EOL +
-			"# initialize actor input variables"														+ EOL +
+			"# initialize actor outputs to null"                                                        + EOL +
+            "z <- NULL"                                                                                 + EOL +
+            ""                                                                                          + EOL +
+            "# initialize actor input variables"														+ EOL +
 			"x <- 3"																					+ EOL +
 			"y <- 12"																					+ EOL +
 			""																							+ EOL +

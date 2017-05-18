@@ -75,7 +75,7 @@ public class TestGroovyActor extends TestCase {
 		assertEquals(3, actor.getOutputValue("out") );
 	}
 	
-	public void testStep_MissingOutput() throws Exception {
+	public void testStep_MissingOutput_NoException() throws Exception {
 
 		_setActorOutputsViaYaml(
 			"a:" 					+ EOL + 
@@ -90,14 +90,7 @@ public class TestGroovyActor extends TestCase {
 
         actor.initialize();
         actor.start();
-		String message = null;
-		try {
-			actor.step();
-		} catch (Exception e) {
-			message = e.getMessage();
-		}
-
-		assertEquals("Actor TestActor did not output a value for b", message);
+		actor.step();
 	}
 	
 	public void testStep_NullOutput() throws Exception {

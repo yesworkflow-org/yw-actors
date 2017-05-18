@@ -264,7 +264,7 @@ public abstract class Actor {
 	////               public actor lifecycle methods                      ////
 	
 			
-	public void initialize()throws Exception {
+	public void initialize() throws Exception {
 		runCount = 0;
 	}
 	

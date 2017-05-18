@@ -61,12 +61,19 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			// augment the initialize script
 			String augmentedStartScript = _getAugmentedStartScript();
 			
+	         // save the step script if the actor uses a step directory
+            if (this.usesStepDirectory()) {
+                File scriptFile = new File(stepDirectory + "/" + "step." + scriptExtension);
+                FileUtils.writeStringToFile(scriptFile, augmentedStartScript);
+            }
+            
 			// run the augmented initialize script
 			String serializedOutput = _runAugmentedScript(augmentedStartScript);
 			
 			// update the actor state based on the augmented script output
 			Map<String,Object> scriptOutputs = _parseSerializedOutput(serializedOutput);
 			_updateInputOutputControlVariables(scriptOutputs);
+	         updateOutputVariables(scriptOutputs);
 			updateStateVariables(scriptOutputs);
 		}
 	}
@@ -76,19 +83,22 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		ScriptAugmenter builder = getNewScriptAugmenter();
 		
 		_appendScriptHeader(builder, "start");
-		_appendInputControlFunctions(builder);
-		_appendOutputControlFunctions(builder);
-		_appendActorSettingInitializers(builder);
-		_appendActorStateVariableInitializers(builder, true);
-		_appendActorInputVariableInitializers(builder);
-		_appendOriginalScript(builder, startScript);
-		_appendOriginalScriptOutputDelimiter(builder);
-		appendSerializationBeginStatement(builder);
-		_appendStateVariableSerializationStatements(builder);
-		_appendInputControlVariableSerializationStatements(builder);
-		_appendOutputControlVariableSerializationStatements(builder);
-		appendSerializationEndStatement(builder);
-		_appendScriptSuffix(builder);
+        _appendInputControlFunctions(builder);
+        _appendOutputControlFunctions(builder);
+        _appendActorSettingInitializers(builder);
+        _appendOutputVariableInitializers(builder);
+        _appendActorStateVariableInitializers(builder, true);
+        _appendActorInputVariableInitializers(builder);
+        _appendStepDirectoryEntryCommand(builder);
+        _appendOriginalScript(builder, startScript);
+        _appendOriginalScriptOutputDelimiter(builder);
+        appendSerializationBeginStatement(builder);
+        _appendOutputVariableSerializationStatements(builder);
+        _appendStateVariableSerializationStatements(builder);
+        _appendInputControlVariableSerializationStatements(builder);
+        _appendOutputControlVariableSerializationStatements(builder);
+        appendSerializationEndStatement(builder);
+        _appendScriptSuffix(builder);
 		
 		return builder.toString();
 	}
@@ -126,6 +136,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 		_appendInputControlFunctions(augmentedScriptBuilder);
 		_appendOutputControlFunctions(augmentedScriptBuilder);
 		_appendActorSettingInitializers(augmentedScriptBuilder);
+        _appendOutputVariableInitializers(augmentedScriptBuilder);
 		_appendActorStateVariableInitializers(augmentedScriptBuilder, true);
 		_appendActorInputVariableInitializers(augmentedScriptBuilder);
 		_appendStepDirectoryEntryCommand(augmentedScriptBuilder);
@@ -254,7 +265,7 @@ public abstract class AugmentedScriptActor extends ScriptActor {
 			script.appendBlankLine();
 		}
 	}
-	
+    
 	protected void _appendActorSettingInitializers(ScriptAugmenter script) throws Exception {
 		if (!constants.isEmpty()) {
 			script.appendComment("initialize actor setting");
