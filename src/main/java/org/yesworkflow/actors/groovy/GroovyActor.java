@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.yesworkflow.util.io.StdoutRecorder;
 import org.yesworkflow.actors.ActorStatus;
+import org.yesworkflow.actors.OutputStreamMode;
 import org.yesworkflow.actors.ScriptActor;
 
 import groovy.lang.Binding;
@@ -143,7 +145,7 @@ public class GroovyActor extends ScriptActor {
 	}
 
 	protected synchronized void runTheScript(String script, Binding binding) throws Exception {
-		Script groovyScript;
+		final Script groovyScript;
 		if (wrapperScript == null ) {
 			groovyScript = compileGroovyScript(script);
 		} else {
@@ -151,7 +153,20 @@ public class GroovyActor extends ScriptActor {
 		}
 		binding.setVariable("_script", script);
 	    groovyScript.setBinding(binding);
-	    groovyScript.run();
+	    
+	    StdoutRecorder recorder = new StdoutRecorder(true);
+
+	    if (stdoutMode == OutputStreamMode.DELAYED) {
+    	    recorder.recordExecution(new StdoutRecorder.WrappedCode() {
+        	    public void execute() throws Exception {
+        	            groovyScript.run();
+        	        }
+    	    });	    
+            outStream.print(recorder.getStdoutRecording());
+            errStream.print(recorder.getStderrRecording());
+        } else {
+            groovyScript.run();
+        }
 	}
 	
 	private synchronized Script compileGroovyScript(String script) {
